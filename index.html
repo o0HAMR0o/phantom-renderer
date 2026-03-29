@@ -6,41 +6,38 @@
 <title>PHANTOM RENDERER</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
-:root{--c1:#0cf;--c2:#f0f}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;font-family:'Space Mono',monospace;color:#fff;user-select:none}
-canvas#cv{display:block;position:fixed;inset:0;width:100%;height:100%}
+canvas#cv{display:block;position:fixed;inset:0}
 #upload{position:fixed;inset:0;z-index:600;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;transition:opacity .5s}
 #upload.gone{opacity:0;pointer-events:none}
-#upload .logo{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;letter-spacing:6px;background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:28px}
-#upload .drop{width:320px;height:200px;border:2px dashed rgba(255,255,255,.15);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:all .3s;position:relative}
-#upload .drop:hover,#upload .drop.over{border-color:var(--c1);background:rgba(0,200,255,.04)}
-#upload .drop svg{opacity:.3}
-#upload .drop .dt{font-size:11px;opacity:.4;letter-spacing:2px}
-#upload .drop .db{font-size:10px;padding:6px 18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:4px;letter-spacing:1px}
+#upload .logo{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;letter-spacing:6px;background:linear-gradient(135deg,#0cf,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:28px}
+.drop{width:320px;height:200px;border:2px dashed rgba(255,255,255,.15);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:all .3s;position:relative}
+.drop:hover,.drop.over{border-color:#0cf;background:rgba(0,200,255,.04)}
+.drop svg{opacity:.3}.drop .dt{font-size:11px;opacity:.4;letter-spacing:2px}
+.drop .db{font-size:10px;padding:6px 18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:4px}
 #upload .hint{margin-top:16px;font-size:9px;opacity:.2;letter-spacing:1px}
 #ov{position:fixed;inset:0;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:500;transition:opacity .4s}
 #ov.show{display:flex}#ov.fade{opacity:0}
-#ov .lt{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;background:linear-gradient(90deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
-#ov .lb{width:160px;height:2px;background:rgba(255,255,255,.06);overflow:hidden;border-radius:1px}
-#ov .lf{height:100%;background:linear-gradient(90deg,var(--c1),var(--c2));width:0%;transition:width .15s}
+#ov .lt{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;background:linear-gradient(90deg,#0cf,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+#ov .lb{width:160px;height:2px;background:rgba(255,255,255,.06);overflow:hidden}
+#ov .lf{height:100%;background:linear-gradient(90deg,#0cf,#f0f);width:0%;transition:width .15s}
 #ov .ls{margin-top:8px;font-size:8px;opacity:.3;letter-spacing:2px}
 #dz{position:fixed;inset:0;z-index:700;background:rgba(0,200,255,.05);border:2px dashed rgba(0,200,255,.3);display:none;align-items:center;justify-content:center}
-#dz.s{display:flex}
-#dz span{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:3px;color:var(--c1)}
+#dz.s{display:flex}#dz span{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:3px;color:#0cf}
 #top{position:fixed;top:0;left:0;right:0;z-index:100;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(0,0,0,.94)0%,rgba(0,0,0,.5)60%,transparent);pointer-events:none;opacity:0;transition:opacity .5s}
 #top.vis{opacity:1}#top>*{pointer-events:auto}
-.logo-sm{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sm{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#0cf,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .g{display:flex;align-items:center;gap:3px;padding:2px 5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:3px}
 .g label{font-size:6.5px;letter-spacing:.8px;opacity:.35;text-transform:uppercase;white-space:nowrap}
 .g select,.g input[type=number]{background:transparent;border:none;color:#fff;font-family:'Space Mono',monospace;font-size:8px;outline:none}
-.g select{cursor:pointer;padding:0 1px}.g select option{background:#111}
+.g select{cursor:pointer}.g select option{background:#111}
 .g input[type=color]{width:16px;height:16px;border:1px solid rgba(255,255,255,.1);background:none;cursor:pointer;padding:0;border-radius:2px}
 .g input[type=number]{width:28px;text-align:center}
-.g input[type=range]{width:50px;height:2px;accent-color:var(--c1)}
+.g input[type=range]{width:50px;height:2px;accent-color:#0cf}
 .sp{width:1px;height:12px;background:rgba(255,255,255,.06)}
-.btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fff;padding:2px 8px;font-family:'Space Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px;transition:all .2s;white-space:nowrap;border-radius:3px}
+.btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fff;padding:2px 8px;font-family:'Space Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px;border-radius:3px;transition:all .2s;white-space:nowrap}
 .btn:hover{background:rgba(255,255,255,.08);border-color:rgba(0,200,255,.3)}
 .btn.rec{background:rgba(255,50,50,.2);border-color:rgba(255,50,50,.5);color:#f55;animation:rp 1s infinite}
 @keyframes rp{0%,100%{opacity:1}50%{opacity:.5}}
@@ -48,7 +45,7 @@ canvas#cv{display:block;position:fixed;inset:0;width:100%;height:100%}
 #bb.vis{opacity:1}
 .nf{font-size:7px;opacity:.2;letter-spacing:1px;pointer-events:auto}
 #rs{font-size:8px;color:#f55;letter-spacing:1px;pointer-events:auto}
-#pb{position:fixed;bottom:0;left:0;height:2px;background:linear-gradient(90deg,var(--c1),var(--c2));z-index:200;width:0}
+#pb{position:fixed;bottom:0;left:0;height:2px;background:linear-gradient(90deg,#0cf,#f0f);z-index:200;width:0}
 </style>
 </head>
 <body>
@@ -60,7 +57,7 @@ canvas#cv{display:block;position:fixed;inset:0;width:100%;height:100%}
     <div class="db">OR CLICK TO BROWSE</div>
     <input type="file" accept=".glb,.gltf" id="file-main" style="position:absolute;opacity:0;inset:0;cursor:pointer">
   </div>
-  <div class="hint">GLB / GLTF — any 3D model</div>
+  <div class="hint">GLB / GLTF</div>
 </div>
 <div id="ov"><div class="lt">PROCESSING</div><div class="lb"><div class="lf" id="lf"></div></div><div class="ls" id="ls">...</div></div>
 <div id="dz"><span>DROP .GLB FILE</span></div>
@@ -70,7 +67,7 @@ canvas#cv{display:block;position:fixed;inset:0;width:100%;height:100%}
   <div class="row">
     <div class="g"><label>MODE</label><select id="mode"><option value="particles">PARTICLES</option><option value="mesh">MESH</option><option value="solid">SOLID</option></select></div>
     <div class="sp"></div>
-    <div class="g"><label>FX</label><select id="fx"><option value="none">NONE</option><option value="wave">WAVE</option><option value="glitch">GLITCH</option><option value="distort">DISTORT</option><option value="explode">EXPLODE</option><option value="pulse">PULSE</option></select></div>
+    <div class="g"><label>FX</label><select id="fx"><option value="0">NONE</option><option value="1">WAVE</option><option value="2">GLITCH</option><option value="3">DISTORT</option><option value="4">EXPLODE</option><option value="5">PULSE</option></select></div>
     <div class="g"><label>AMT</label><input type="range" id="fxa" min="0" max="100" value="50"></div>
     <div class="sp"></div>
     <div class="g"><label>A</label><input type="color" id="ca" value="#00ccff"></div>
@@ -80,13 +77,12 @@ canvas#cv{display:block;position:fixed;inset:0;width:100%;height:100%}
     <div class="g"><label>CAM</label><select id="cam"><option value="orbit">ORBIT</option><option value="drift">DRIFT</option><option value="dramatic">DRAMATIC</option><option value="top">TOP</option><option value="static">STATIC</option></select></div>
     <div class="sp"></div>
     <label class="btn" style="position:relative;overflow:hidden">GLB<input type="file" accept=".glb,.gltf" id="file-new" style="position:absolute;opacity:0;inset:0;cursor:pointer"></label>
-    <div class="sp"></div>
-    <div class="g"><label>SEC</label><input type="number" id="dur" value="5" min="1" max="60" step="1"></div>
+    <div class="g"><label>SEC</label><input type="number" id="dur" value="5" min="1" max="60"></div>
     <div class="g"><label>FPS</label><select id="fps"><option value="24">24</option><option value="30">30</option></select></div>
     <button class="btn" id="rb">● REC</button>
   </div>
 </div>
-<div id="bb"><div class="nf" id="info">DRAG ROTATE / SCROLL ZOOM</div><div id="rs"></div></div>
+<div id="bb"><div class="nf" id="info">DRAG / SCROLL / DROP</div><div id="rs"></div></div>
 <div id="pb"></div>
 
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.164.1/build/three.module.js","three/addons/":"https://unpkg.com/three@0.164.1/examples/jsm/"}}</script>
@@ -95,35 +91,67 @@ canvas#cv{display:block;position:fixed;inset:0;width:100%;height:100%}
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js';
-import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
-import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
-import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 
-const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
 const $=id=>document.getElementById(id);
-const loader=new GLTFLoader();
-const draco=new DRACOLoader();draco.setDecoderPath('https://unpkg.com/three@0.164.1/examples/jsm/libs/draco/');loader.setDRACOLoader(draco);
-
-const ov=$('ov'),lf=$('lf'),ls=$('ls');
-const sL=(p,t)=>{lf.style.width=p+'%';ls.textContent=t};
-const showOv=()=>{ov.classList.add('show');ov.classList.remove('fade')};
-const hideOv=()=>{ov.classList.add('fade');setTimeout(()=>ov.classList.remove('show'),400)};
-const tick=()=>new Promise(r=>setTimeout(r,20));
-
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const tick=()=>new Promise(r=>setTimeout(r,25));
+const loader=new GLTFLoader();const draco=new DRACOLoader();draco.setDecoderPath('https://unpkg.com/three@0.164.1/examples/jsm/libs/draco/');loader.setDRACOLoader(draco);
+const sL=(p,t)=>{$('lf').style.width=p+'%';$('ls').textContent=t};
+const showOv=()=>{$('ov').classList.add('show');$('ov').classList.remove('fade')};
+const hideOv=()=>{$('ov').classList.add('fade');setTimeout(()=>$('ov').classList.remove('show'),400)};
 function loadFile(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>loader.parse(e.target.result,'',g=>r(g.scene),j);rd.readAsArrayBuffer(f)})}
+
+// ===== GLSL NOISE =====
+const NOISE_GLSL=`
+vec3 mod289v(vec3 x){return x-floor(x*(1./289.))*289.;}
+vec4 mod289v4(vec4 x){return x-floor(x*(1./289.))*289.;}
+vec4 permute(vec4 x){return mod289v4(((x*34.)+1.)*x);}
+float snoise3(vec3 v){
+  const vec2 C=vec2(1./6.,1./3.);
+  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;
+  vec3 i1=min(g,l.zxy);vec3 i2=max(g,l.zxy);
+  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-.5;
+  i=mod289v(i);
+  vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+  vec4 j=p-49.*floor(p/49.);
+  vec4 x_=floor(j/7.);vec4 y_=floor(j-7.*x_);
+  vec4 x=x_/7.-.5;vec4 y=y_/7.-.5;
+  vec4 h=1.-abs(x)-abs(y);
+  vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+  vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;
+  vec4 sh=-step(h,vec4(0.));
+  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+  vec4 norm=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
+  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
+  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+}`;
+
+// ===== FX DISPLACEMENT (all uniforms are float) =====
+const FX_FUNC=`
+uniform float uTime;
+uniform float uFx;
+uniform float uAmt;
+vec3 fxDisplace(vec3 p,float seed){
+  float fx=uFx;float amt=uAmt;
+  if(fx<0.5||amt<0.001)return p;
+  if(fx<1.5){p.x+=sin(p.y*4.+uTime*2.)*amt*.4;p.z+=cos(p.y*3.5+uTime*1.5)*amt*.35;p.y+=sin(p.x*5.+uTime*1.2)*amt*.15;p.x+=cos(p.z*6.+uTime)*amt*.1;}
+  else if(fx<2.5){float bid=floor((p.y+2.)*6.);float trig=step(.85,fract(sin(bid*91.2+floor(uTime*8.))*4567.));float sh=(fract(sin(bid*173.1+floor(uTime*12.))*999.)-.5)*2.;p.x+=sh*amt*1.8*trig;p.z+=sh*amt*.5*trig*.3;float sc=step(.95,fract(sin(seed*9876.+floor(uTime*15.))*5432.));p+=vec3(fract(sin(seed*111.)*.5)-.25,fract(sin(seed*222.)*.5)-.25,fract(sin(seed*333.)*.5)-.25)*amt*sc*1.5;}
+  else if(fx<3.5){float n1=snoise3(p*1.2+uTime*.4);float n2=snoise3(p*1.8+vec3(100.,0.,0.)+uTime*.35);float n3=snoise3(p*1.5+vec3(0.,100.,0.)+uTime*.45);p+=vec3(n1,n2,n3)*amt*1.2;}
+  else if(fx<4.5){vec3 dir=normalize(p+vec3(.001));float dist=length(p);float wave=sin(dist*5.-uTime*4.)*.5+.5;p+=dir*wave*amt*1.2;p+=dir*snoise3(p*2.+uTime*.5)*amt*.4;}
+  else{float beat=pow(abs(sin(uTime*3.14159*1.5)),2.);p*=1.+beat*amt*.5;p+=normalize(p+vec3(.001))*sin(length(p)*8.-uTime*5.)*.15*amt;}
+  return p;
+}`;
 
 // ===== SURFACE SAMPLING =====
 function sampleSurface(root,n){
-  root.updateMatrixWorld(true);
-  const ap=[],ai=[];
-  root.traverse(c=>{
-    if(!c.isMesh||!c.geometry)return;
-    const g=c.geometry,p=g.attributes.position;if(!p)return;
+  root.updateMatrixWorld(true);const ap=[],ai=[];
+  root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const g=c.geometry,p=g.attributes.position;if(!p)return;
     const m=c.matrixWorld,v=new THREE.Vector3(),sv=ap.length/3;
     for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);v.applyMatrix4(m);ap.push(v.x,v.y,v.z)}
-    if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);
-    else for(let i=0;i<p.count;i++)ai.push(i+sv);
-  });
+    if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);});
   if(!ap.length)return new Float32Array(n*3);
   const pos=new Float32Array(ap),idx=ai,tc=Math.floor(idx.length/3);if(!tc)return new Float32Array(n*3);
   const ar=new Float32Array(tc);let ta=0;
@@ -137,157 +165,25 @@ function sampleSurface(root,n){
     res[s*3]=vA.x*w+vB.x*u+vC.x*v;res[s*3+1]=vA.y*w+vB.y*u+vC.y*v;res[s*3+2]=vA.z*w+vB.z*u+vC.z*v;}
   return res;
 }
+function normalize(s,sz=3.5){s.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s),si=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());const mx=Math.max(si.x,si.y,si.z);if(!mx)return;const sc=sz/mx;s.traverse(ch=>{if(ch.isMesh){ch.geometry.translate(-c.x,-c.y,-c.z);ch.geometry.scale(sc,sc,sc)}});s.position.set(0,0,0);s.scale.set(1,1,1);s.updateMatrixWorld(true)}
+function extractGeo(root){root.updateMatrixWorld(true);const ap=[],ai=[];root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const g=c.geometry,p=g.attributes.position;if(!p)return;const m=c.matrixWorld,v=new THREE.Vector3(),sv=ap.length/3;for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);v.applyMatrix4(m);ap.push(v.x,v.y,v.z)}if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);});const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(ap,3));if(ai.length)geo.setIndex(ai);geo.computeVertexNormals();return geo}
+function addGradient(geo,cA,cB){const pos=geo.attributes.position;let mny=1e9,mxy=-1e9;for(let i=0;i<pos.count;i++){const y=pos.getY(i);if(y<mny)mny=y;if(y>mxy)mxy=y}const ry=mxy-mny||1;const cols=new Float32Array(pos.count*3),rands=new Float32Array(pos.count);for(let i=0;i<pos.count;i++){const t=(pos.getY(i)-mny)/ry;const c=cA.clone().lerp(cB,t);c.offsetHSL((Math.random()-.5)*.03,0,(Math.random()-.5)*.04);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b;rands[i]=Math.random()}geo.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));geo.setAttribute('aR',new THREE.Float32BufferAttribute(rands,1))}
 
-function normalize(s,sz=3.5){
-  s.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s),si=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());
-  const mx=Math.max(si.x,si.y,si.z);if(!mx)return;const sc=sz/mx;
-  s.traverse(ch=>{if(ch.isMesh){ch.geometry.translate(-c.x,-c.y,-c.z);ch.geometry.scale(sc,sc,sc)}});
-  s.position.set(0,0,0);s.scale.set(1,1,1);s.updateMatrixWorld(true);
-}
+// ===== SHADER BUILDERS =====
+function mkPtsMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt},uS:{value:2.5},uP:{value:ren.getPixelRatio()}},vertexShader:NOISE_GLSL+FX_FUNC+`attribute float aR;attribute vec3 color;varying vec3 vC;varying float vA;uniform float uS,uP;void main(){vC=color;vec3 p=position;p=fxDisplace(p,aR);float t=uTime*.2+aR*6.283;p+=vec3(cos(t*.7),sin(t),sin(t*1.3))*.001;vA=.65+.35*(.5+.5*sin(uTime*.7+aR*8.));vec4 mv=modelViewMatrix*vec4(p,1.);gl_PointSize=uS*uP*(1./-mv.z);gl_Position=projectionMatrix*mv;}`,fragmentShader:`varying vec3 vC;varying float vA;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;float g=exp(-d*3.5);gl_FragColor=vec4(vC*g*1.2,vA*g);}`,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending})}
+function mkWireMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt}},vertexShader:NOISE_GLSL+FX_FUNC+`attribute vec3 color;attribute float aR;varying vec3 vC;void main(){vC=color;vec3 p=position;p=fxDisplace(p,aR);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,fragmentShader:`varying vec3 vC;void main(){gl_FragColor=vec4(vC*.85,.55);}`,wireframe:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})}
+function mkSolidMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt},uLD:{value:new THREE.Vector3(.5,.8,.6).normalize()}},vertexShader:NOISE_GLSL+FX_FUNC+`attribute vec3 color;attribute float aR;varying vec3 vC;varying vec3 vN;varying vec3 vP;void main(){vC=color;vec3 p=position;p=fxDisplace(p,aR);vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,fragmentShader:`varying vec3 vC,vN,vP;uniform vec3 uLD;void main(){vec3 n=normalize(vN);float diff=max(dot(n,uLD),0.)*.9;vec3 vd=normalize(-vP);float spec=pow(max(dot(n,normalize(uLD+vd)),0.),40.)*.3;float rim=pow(1.-max(dot(n,vd),0.),3.)*.25;gl_FragColor=vec4(vC*(diff+.12)+spec+rim*vC,.92);}`,transparent:true,side:THREE.DoubleSide})}
+function mkWireOverMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt}},vertexShader:NOISE_GLSL+FX_FUNC+`attribute float aR;void main(){vec3 p=position;p=fxDisplace(p,aR);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,fragmentShader:`void main(){gl_FragColor=vec4(1.,1.,1.,.03);}`,wireframe:true,transparent:true,depthWrite:false})}
 
-function extractGeo(root){
-  root.updateMatrixWorld(true);const ap=[],ai=[];
-  root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const g=c.geometry,p=g.attributes.position;if(!p)return;
-    const m=c.matrixWorld,v=new THREE.Vector3(),sv=ap.length/3;
-    for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);v.applyMatrix4(m);ap.push(v.x,v.y,v.z)}
-    if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);});
-  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(ap,3));
-  if(ai.length)geo.setIndex(ai);geo.computeVertexNormals();return geo;
-}
+// ===== POST-PROCESS =====
+let postScene,postCam,postMat,renderTarget;
+function initPost(){renderTarget=new THREE.WebGLRenderTarget(innerWidth,innerHeight);postScene=new THREE.Scene();postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);postMat=new THREE.ShaderMaterial({uniforms:{tDiffuse:{value:renderTarget.texture},uTime:{value:0},uGlitch:{value:0}},vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,1.);}`,fragmentShader:`uniform sampler2D tDiffuse;uniform float uTime,uGlitch;varying vec2 vUv;float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}void main(){vec2 uv=vUv;vec4 col=texture2D(tDiffuse,uv);if(uGlitch>.01){col.rgb+=sin(uv.y*900.+uTime*3.)*.015*uGlitch;float sp=uGlitch*.012;float bt=step(.88,rand(vec2(floor(uv.y*18.),floor(uTime*7.))));sp+=bt*uGlitch*.035;col.r=texture2D(tDiffuse,uv+vec2(sp,0.)).r;col.b=texture2D(tDiffuse,uv-vec2(sp,0.)).b;float tear=step(.94,rand(vec2(floor(uv.y*25.),floor(uTime*11.))));col=mix(col,texture2D(tDiffuse,vec2(uv.x+tear*.08*uGlitch*sin(uTime*60.),uv.y)),.5+.5*tear);col.rgb+=rand(uv+uTime)*.05*uGlitch;}float vig=1.-dot((vUv-.5)*1.2,(vUv-.5)*1.2);col.rgb*=mix(.72,1.,vig);gl_FragColor=col;}`});postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),postMat))}
 
-// ===== EFFECT VERTEX SHADER CHUNKS =====
-const FX_VERT = `
-// Simplex-like noise
-vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}
-vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}
-vec4 perm(vec4 x){return mod289(((x*34.)+1.)*x);}
-float snoise(vec3 v){
-  const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);
-  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
-  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g,l.zxy);vec3 i2=max(g,l.zxy);
-  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
-  i=mod289(i);vec4 p=perm(perm(perm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
-  float n_=1./7.;vec3 ns=n_*D.wyz-D.xzx;
-  vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);
-  vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;
-  vec4 h=1.-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
-  vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;
-  vec4 sh=-step(h,vec4(0.));
-  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
-  vec4 norm=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
-  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);
-  m=m*m;return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-}
-
-uniform float uTime;
-uniform float uFxAmt;
-uniform int uFxType; // 0=none,1=wave,2=glitch,3=distort,4=explode,5=pulse
-
-vec3 applyFx(vec3 p, float rand){
-  if(uFxType==0) return p;
-  float amt=uFxAmt;
-  
-  if(uFxType==1){ // WAVE
-    float w=sin(p.y*3.+uTime*2.)*.5+.5;
-    p.x+=sin(p.y*4.+uTime*1.5)*amt*.3*w;
-    p.z+=cos(p.y*3.5+uTime*1.2)*amt*.25*w;
-    p.y+=sin(p.x*5.+uTime)*amt*.1;
-  }
-  else if(uFxType==2){ // GLITCH
-    // Block displacement
-    float blockY=floor(p.y*8.+uTime*3.)/8.;
-    float glitchTrigger=step(.92,fract(sin(blockY*43.1+floor(uTime*8.))*4832.));
-    float shift=sin(blockY*123.4+uTime*12.)*amt*1.5;
-    p.x+=shift*glitchTrigger;
-    // Random scatter
-    float scatter=step(.97,fract(sin(rand*9999.+floor(uTime*15.))*1234.));
-    p+=vec3(sin(rand*100.),cos(rand*200.),sin(rand*300.))*.5*amt*scatter;
-  }
-  else if(uFxType==3){ // DISTORT
-    float n=snoise(p*1.5+uTime*.3);
-    float n2=snoise(p*3.+uTime*.5);
-    p+=vec3(n,n2,snoise(p*2.-uTime*.4))*amt*.8;
-  }
-  else if(uFxType==4){ // EXPLODE
-    vec3 dir=normalize(p+.001);
-    float dist=length(p);
-    float wave=sin(dist*4.-uTime*3.)*.5+.5;
-    p+=dir*wave*amt*.8;
-    p+=dir*snoise(p*3.+uTime)*amt*.3;
-  }
-  else if(uFxType==5){ // PULSE
-    float beat=abs(sin(uTime*3.14159*2.));
-    float scale=1.+beat*amt*.4;
-    p*=scale;
-    p+=normalize(p+.001)*sin(length(p)*8.-uTime*4.)*.1*amt;
-  }
-  return p;
-}
-`;
-
-// ===== POST-PROCESSING GLITCH SHADER =====
-const GlitchShader = {
-  uniforms: {
-    tDiffuse: {value:null},
-    uTime: {value:0},
-    uGlitchAmt: {value:0},
-    uFxType: {value:0},
-  },
-  vertexShader: `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-  fragmentShader: `
-    uniform sampler2D tDiffuse;
-    uniform float uTime;
-    uniform float uGlitchAmt;
-    uniform int uFxType;
-    varying vec2 vUv;
-    
-    float rand(vec2 co){return fract(sin(dot(co,vec2(12.9898,78.233)))*43758.5453);}
-    
-    void main(){
-      vec2 uv=vUv;
-      vec4 col=texture2D(tDiffuse,uv);
-      
-      if(uFxType==2 && uGlitchAmt>0.01){ // GLITCH post-process
-        // Scanlines
-        float scanline=sin(uv.y*800.+uTime*2.)*.02*uGlitchAmt;
-        col.rgb+=scanline;
-        
-        // RGB split
-        float split=uGlitchAmt*.015;
-        float blockTrigger=step(.9,rand(vec2(floor(uv.y*20.),floor(uTime*6.))));
-        split+=blockTrigger*uGlitchAmt*.04;
-        col.r=texture2D(tDiffuse,uv+vec2(split,0.)).r;
-        col.b=texture2D(tDiffuse,uv-vec2(split,0.)).b;
-        
-        // Horizontal tear
-        float tear=step(.96,rand(vec2(floor(uv.y*30.),floor(uTime*10.))));
-        uv.x+=tear*(.1*uGlitchAmt)*sin(uTime*50.);
-        col=mix(col,texture2D(tDiffuse,uv),.5+.5*tear);
-        
-        // Noise
-        float noise=rand(uv+uTime)*.06*uGlitchAmt;
-        col.rgb+=noise;
-      }
-      
-      // Vignette (always subtle)
-      float vig=1.-dot((vUv-.5)*1.2,(vUv-.5)*1.2);
-      col.rgb*=mix(.7,1.,vig);
-      
-      gl_FragColor=col;
-    }
-  `
-};
-
-// ===== SCENE =====
-let scene,cam,ren,clk,composer;
-let glitchPass;
-let currentGroup=null;
-let ambLight,dirLight,dirLight2;
+// ===== MAIN SCENE =====
+let scene,cam,ren,clk;
+let grp=null,ambL,dirL,dirL2;
 let isRec=false,frames=[],fCnt=0;
-let drag=false,dX=0,dY=0;
-let cT=0,cP=Math.PI/3.2,cR=4.5,tT=0,tP=Math.PI/3.2,tD=0;
+let drag=false,dX=0,dY=0,cT=0,cP=Math.PI/3.2,cR=4.5,tT=0,tP=Math.PI/3.2,tD=0;
 let lastPos=null,lastModel=null;
 const PC=200000;
 
@@ -297,24 +193,13 @@ function init(){
   ren=new THREE.WebGLRenderer({canvas:$('cv'),antialias:true,preserveDrawingBuffer:true});
   ren.setSize(innerWidth,innerHeight);ren.setPixelRatio(Math.min(devicePixelRatio,2));
   ren.toneMapping=THREE.ACESFilmicToneMapping;ren.toneMappingExposure=1.2;
-  clk=new THREE.Clock();
+  clk=new THREE.Clock();initPost();
+  ambL=new THREE.AmbientLight(0x222233,.3);scene.add(ambL);
+  dirL=new THREE.DirectionalLight(0xffffff,.8);dirL.position.set(3,5,4);scene.add(dirL);
+  dirL2=new THREE.DirectionalLight(0x4488ff,.3);dirL2.position.set(-3,-2,-4);scene.add(dirL2);
+  const dg=new THREE.BufferGeometry(),dn=1200,dp=new Float32Array(dn*3);for(let i=0;i<dn;i++){dp[i*3]=(Math.random()-.5)*20;dp[i*3+1]=(Math.random()-.5)*20;dp[i*3+2]=(Math.random()-.5)*20}dg.setAttribute('position',new THREE.BufferAttribute(dp,3));scene.add(new THREE.Points(dg,new THREE.PointsMaterial({color:0x162636,size:.015,transparent:true,opacity:.1,blending:THREE.AdditiveBlending,depthWrite:false})));
 
-  // Post-processing
-  composer=new EffectComposer(ren);
-  composer.addPass(new RenderPass(scene,cam));
-  glitchPass=new ShaderPass(GlitchShader);
-  composer.addPass(glitchPass);
-
-  ambLight=new THREE.AmbientLight(0x222233,.3);scene.add(ambLight);
-  dirLight=new THREE.DirectionalLight(0xffffff,.8);dirLight.position.set(3,5,4);scene.add(dirLight);
-  dirLight2=new THREE.DirectionalLight(0x4488ff,.3);dirLight2.position.set(-3,-2,-4);scene.add(dirLight2);
-  
-  const dg=new THREE.BufferGeometry(),dn=1500,dp=new Float32Array(dn*3);
-  for(let i=0;i<dn;i++){dp[i*3]=(Math.random()-.5)*20;dp[i*3+1]=(Math.random()-.5)*20;dp[i*3+2]=(Math.random()-.5)*20}
-  dg.setAttribute('position',new THREE.BufferAttribute(dp,3));
-  scene.add(new THREE.Points(dg,new THREE.PointsMaterial({color:0x162636,size:.015,transparent:true,opacity:.12,blending:THREE.AdditiveBlending,depthWrite:false})));
-
-  addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();ren.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight)});
+  addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();ren.setSize(innerWidth,innerHeight);renderTarget.setSize(innerWidth,innerHeight)});
   const cv=ren.domElement;
   cv.addEventListener('mousedown',e=>{drag=true;dX=e.clientX;dY=e.clientY});
   cv.addEventListener('mousemove',e=>{if(!drag)return;tT-=(e.clientX-dX)*.005;tP=cl(tP+(e.clientY-dY)*.005,.1,Math.PI-.1);dX=e.clientX;dY=e.clientY});
@@ -323,17 +208,14 @@ function init(){
   cv.addEventListener('touchstart',e=>{if(e.touches.length===1){drag=true;dX=e.touches[0].clientX;dY=e.touches[0].clientY}else if(e.touches.length===2){drag=false;const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;tD=Math.sqrt(dx*dx+dy*dy)}e.preventDefault()},{passive:false});
   cv.addEventListener('touchmove',e=>{if(e.touches.length===1&&drag){tT-=(e.touches[0].clientX-dX)*.007;tP=cl(tP+(e.touches[0].clientY-dY)*.007,.1,Math.PI-.1);dX=e.touches[0].clientX;dY=e.touches[0].clientY}else if(e.touches.length===2){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;const d=Math.sqrt(dx*dx+dy*dy);cR=cl(cR-(d-tD)*.008,.5,20);tD=d}e.preventDefault()},{passive:false});
   cv.addEventListener('touchend',()=>drag=false);
-
   document.addEventListener('dragover',e=>{e.preventDefault();$('dz').classList.add('s')});
   document.addEventListener('dragleave',e=>{if(!e.relatedTarget)$('dz').classList.remove('s')});
   document.addEventListener('drop',async e=>{e.preventDefault();$('dz').classList.remove('s');const f=e.dataTransfer.files[0];if(f&&(f.name.endsWith('.glb')||f.name.endsWith('.gltf')))await processFile(f)});
-
   $('mode').addEventListener('change',()=>applyMode());
   $('fx').addEventListener('change',()=>applyMode());
-  $('fxa').addEventListener('input',()=>updateFxUniforms());
   $('ca').addEventListener('input',()=>applyMode());
   $('cb').addEventListener('input',()=>applyMode());
-  $('li').addEventListener('input',e=>{const v=e.target.value/100;dirLight.intensity=v*1.5;ambLight.intensity=v*.5});
+  $('li').addEventListener('input',e=>{const v=e.target.value/100;dirL.intensity=v*1.5;ambL.intensity=v*.5});
   $('rb').addEventListener('click',toggleRec);
   $('file-new').addEventListener('change',async e=>{const f=e.target.files[0];if(f)await processFile(f)});
   $('file-main').addEventListener('change',async e=>{const f=e.target.files[0];if(f)await processFile(f)});
@@ -342,175 +224,47 @@ function init(){
   $('drop-area').addEventListener('drop',async e=>{e.preventDefault();e.currentTarget.classList.remove('over');const f=e.dataTransfer.files[0];if(f)await processFile(f)});
 }
 
-async function processFile(file){
+async function processFile(f){
   $('upload').classList.add('gone');showOv();sL(10,'READING...');await tick();
-  try{
-    const scn=await loadFile(file);sL(35,'NORMALIZING...');await tick();
-    normalize(scn,3.5);lastModel=scn.clone(true);lastModel.updateMatrixWorld(true);
-    sL(55,'SAMPLING '+PC.toLocaleString()+' PTS...');await tick();
-    lastPos=sampleSurface(scn,PC);
-    sL(88,'RENDERING...');await tick();
-    applyMode();sL(100,'');await tick();
-    hideOv();$('top').classList.add('vis');$('bb').classList.add('vis');
-    $('info').textContent=file.name.replace(/\.\w+$/,'')+' — DRAG / SCROLL / DROP NEW';
-  }catch(e){console.error(e);sL(0,'ERROR');setTimeout(()=>{hideOv();$('upload').classList.remove('gone')},2000)}
-}
-
-function getFxType(){return['none','wave','glitch','distort','explode','pulse'].indexOf($('fx').value)}
-function getFxAmt(){return $('fxa').value/100}
-
-function updateFxUniforms(){
-  if(!currentGroup)return;
-  const amt=getFxAmt(),fxT=getFxType();
-  currentGroup.traverse(c=>{
-    if(c.material?.uniforms){
-      if(c.material.uniforms.uFxAmt)c.material.uniforms.uFxAmt.value=amt;
-      if(c.material.uniforms.uFxType)c.material.uniforms.uFxType.value=fxT;
-    }
-  });
+  try{const scn=await loadFile(f);sL(35,'NORMALIZING...');await tick();normalize(scn,3.5);lastModel=scn.clone(true);lastModel.updateMatrixWorld(true);
+    sL(55,'SAMPLING...');await tick();lastPos=sampleSurface(scn,PC);sL(88,'RENDERING...');await tick();applyMode();sL(100,'');await tick();hideOv();
+    $('top').classList.add('vis');$('bb').classList.add('vis');$('info').textContent=f.name.replace(/\.\w+$/,'');}
+  catch(e){console.error(e);sL(0,'ERROR');setTimeout(()=>{hideOv();$('upload').classList.remove('gone')},2000)}
 }
 
 function applyMode(){
-  if(currentGroup){scene.remove(currentGroup);currentGroup.traverse(c=>{if(c.geometry)c.geometry.dispose();if(c.material){if(Array.isArray(c.material))c.material.forEach(m=>m.dispose());else c.material.dispose()}});currentGroup=null}
-  
-  const mode=$('mode').value;
-  const colorA=new THREE.Color($('ca').value),colorB=new THREE.Color($('cb').value);
-  const fxType=getFxType(),fxAmt=getFxAmt();
-  currentGroup=new THREE.Group();
-  
-  if(mode==='particles'){
-    if(!lastPos)return;
-    const pos=lastPos,cnt=pos.length/3;
-    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos.slice(),3));
-    let minY=Infinity,maxY=-Infinity;for(let i=0;i<cnt;i++){const y=pos[i*3+1];if(y<minY)minY=y;if(y>maxY)maxY=y}
-    const rY=maxY-minY||1;
+  if(grp){scene.remove(grp);grp.traverse(c=>{if(c.geometry)c.geometry.dispose();if(c.material)c.material.dispose()});grp=null}
+  const mode=$('mode').value,fxV=parseFloat($('fx').value),amtV=$('fxa').value/100;
+  const cA=new THREE.Color($('ca').value),cB=new THREE.Color($('cb').value);
+  grp=new THREE.Group();
+  if(mode==='particles'&&lastPos){
+    const pos=lastPos,cnt=pos.length/3,geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos.slice(),3));
+    let mny=1e9,mxy=-1e9;for(let i=0;i<cnt;i++){const y=pos[i*3+1];if(y<mny)mny=y;if(y>mxy)mxy=y}const ry=mxy-mny||1;
     const rands=new Float32Array(cnt),cols=new Float32Array(cnt*3);
-    for(let i=0;i<cnt;i++){rands[i]=Math.random();const t=(pos[i*3+1]-minY)/rY;const c=colorA.clone().lerp(colorB,t);c.offsetHSL((Math.random()-.5)*.04,0,(Math.random()-.5)*.05);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b}
+    for(let i=0;i<cnt;i++){rands[i]=Math.random();const t=(pos[i*3+1]-mny)/ry;const c=cA.clone().lerp(cB,t);c.offsetHSL((Math.random()-.5)*.03,0,(Math.random()-.5)*.04);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b}
     geo.setAttribute('aR',new THREE.BufferAttribute(rands,1));geo.setAttribute('color',new THREE.BufferAttribute(cols,3));
-    
-    currentGroup.add(new THREE.Points(geo,new THREE.ShaderMaterial({
-      uniforms:{uTime:{value:0},uS:{value:2.5},uP:{value:ren.getPixelRatio()},uFxAmt:{value:fxAmt},uFxType:{value:fxType}},
-      vertexShader:FX_VERT+`
-        attribute float aR;attribute vec3 color;varying vec3 vC;varying float vA;uniform float uS,uP;
-        void main(){
-          vC=color;vec3 p=position;
-          p=applyFx(p,aR);
-          float t=uTime*.2+aR*6.283;p+=vec3(cos(t*.7),sin(t),sin(t*1.3))*.001;
-          vA=.65+.35*(.5+.5*sin(uTime*.7+aR*8.));
-          vec4 mv=modelViewMatrix*vec4(p,1.);gl_PointSize=uS*uP*(1./-mv.z);gl_Position=projectionMatrix*mv;}`,
-      fragmentShader:`varying vec3 vC;varying float vA;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;float g=exp(-d*3.5);gl_FragColor=vec4(vC*g*1.2,vA*g);}`,
-      transparent:true,depthWrite:false,blending:THREE.AdditiveBlending
-    })));
+    grp.add(new THREE.Points(geo,mkPtsMat(fxV,amtV)));
+  }else if(mode==='mesh'&&lastModel){
+    const geo=extractGeo(lastModel);addGradient(geo,cA,cB);grp.add(new THREE.Mesh(geo,mkWireMat(fxV,amtV)));
+  }else if(mode==='solid'&&lastModel){
+    const geo=extractGeo(lastModel);addGradient(geo,cA,cB);grp.add(new THREE.Mesh(geo,mkSolidMat(fxV,amtV)));
+    const wg=geo.clone();wg.setAttribute('aR',geo.attributes.aR.clone());grp.add(new THREE.Mesh(wg,mkWireOverMat(fxV,amtV)));
   }
-  else if(mode==='mesh'){
-    if(!lastModel)return;
-    const merged=extractGeo(lastModel);
-    const pos=merged.attributes.position;
-    let minY=Infinity,maxY=-Infinity;for(let i=0;i<pos.count;i++){const y=pos.getY(i);if(y<minY)minY=y;if(y>maxY)maxY=y}
-    const rY=maxY-minY||1;
-    const cols=new Float32Array(pos.count*3),rands=new Float32Array(pos.count);
-    for(let i=0;i<pos.count;i++){const t=(pos.getY(i)-minY)/rY;const c=colorA.clone().lerp(colorB,t);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b;rands[i]=Math.random()}
-    merged.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));
-    merged.setAttribute('aR',new THREE.Float32BufferAttribute(rands,1));
-    
-    currentGroup.add(new THREE.Mesh(merged,new THREE.ShaderMaterial({
-      uniforms:{uTime:{value:0},uFxAmt:{value:fxAmt},uFxType:{value:fxType}},
-      vertexShader:FX_VERT+`
-        attribute vec3 color;attribute float aR;varying vec3 vC;
-        void main(){vC=color;vec3 p=position;p=applyFx(p,aR);
-        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
-      fragmentShader:`varying vec3 vC;void main(){gl_FragColor=vec4(vC*.8,.6);}`,
-      wireframe:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
-    })));
-  }
-  else if(mode==='solid'){
-    if(!lastModel)return;
-    const merged=extractGeo(lastModel);
-    const pos=merged.attributes.position,norm=merged.attributes.normal;
-    let minY=Infinity,maxY=-Infinity;for(let i=0;i<pos.count;i++){const y=pos.getY(i);if(y<minY)minY=y;if(y>maxY)maxY=y}
-    const rY=maxY-minY||1;
-    const cols=new Float32Array(pos.count*3),rands=new Float32Array(pos.count);
-    for(let i=0;i<pos.count;i++){const t=(pos.getY(i)-minY)/rY;const c=colorA.clone().lerp(colorB,t);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b;rands[i]=Math.random()}
-    merged.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));
-    merged.setAttribute('aR',new THREE.Float32BufferAttribute(rands,1));
-    
-    currentGroup.add(new THREE.Mesh(merged,new THREE.ShaderMaterial({
-      uniforms:{uTime:{value:0},uFxAmt:{value:fxAmt},uFxType:{value:fxType},
-        uLightDir:{value:new THREE.Vector3(.5,.8,.6).normalize()},uLightInt:{value:.8}},
-      vertexShader:FX_VERT+`
-        attribute vec3 color;attribute float aR;varying vec3 vC;varying vec3 vN;varying vec3 vP;
-        void main(){vC=color;vec3 p=position;p=applyFx(p,aR);
-        vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;
-        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
-      fragmentShader:`
-        varying vec3 vC;varying vec3 vN;varying vec3 vP;
-        uniform vec3 uLightDir;uniform float uLightInt;
-        void main(){
-          vec3 n=normalize(vN);vec3 l=normalize(uLightDir);
-          float diff=max(dot(n,l),0.)*uLightInt;
-          vec3 viewDir=normalize(-vP);vec3 h=normalize(l+viewDir);
-          float spec=pow(max(dot(n,h),0.),32.)*.4;
-          float rim=pow(1.-max(dot(n,viewDir),0.),3.)*.3;
-          vec3 col=vC*(diff+.15)+spec+rim*vC;
-          gl_FragColor=vec4(col,.9);
-        }`,
-      transparent:true,side:THREE.DoubleSide,depthWrite:true
-    })));
-    
-    // Wireframe overlay
-    const wGeo=merged.clone();wGeo.setAttribute('aR',new THREE.Float32BufferAttribute(rands.slice(),1));
-    currentGroup.add(new THREE.Mesh(wGeo,new THREE.ShaderMaterial({
-      uniforms:{uTime:{value:0},uFxAmt:{value:fxAmt},uFxType:{value:fxType}},
-      vertexShader:FX_VERT+`
-        attribute float aR;void main(){vec3 p=position;p=applyFx(p,aR);
-        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
-      fragmentShader:`void main(){gl_FragColor=vec4(1.,1.,1.,.03);}`,
-      wireframe:true,transparent:true,depthWrite:false
-    })));
-  }
-  
-  scene.add(currentGroup);
+  scene.add(grp);
 }
 
 function loop(){
-  requestAnimationFrame(loop);
-  const t=clk.getElapsedTime();
-  const camMode=$('cam').value;
-  
-  if(camMode!=='static'&&!drag){
-    let theta,phi;
-    switch(camMode){
-      case'orbit':theta=t*.3;phi=Math.PI/3.2;break;
-      case'drift':theta=t*.08+Math.sin(t*.15)*.5;phi=Math.PI/3+Math.sin(t*.12)*.2;break;
-      case'dramatic':theta=t*.2+Math.sin(t*.3)*.8;phi=Math.PI/4+Math.sin(t*.15)*.6;break;
-      case'top':theta=t*.15;phi=.3+Math.sin(t*.1)*.15;break;
-      default:theta=t*.3;phi=Math.PI/3.2;
-    }
-    cT+=(theta-cT)*.03;cP+=(phi-cP)*.03;
-  }else{cT+=(tT-cT)*.08;cP+=(tP-cP)*.08}
-  
-  const r=cR+(($('cam').value==='dramatic')?Math.sin(t*.2)*1.5:0);
-  cam.position.x=Math.sin(cP)*Math.cos(cT)*r;cam.position.y=Math.cos(cP)*r;cam.position.z=Math.sin(cP)*Math.sin(cT)*r;
-  cam.lookAt(0,0,0);
-  
-  // Update all shader uniforms
-  const fxAmt=getFxAmt(),fxT=getFxType();
-  if(currentGroup){currentGroup.traverse(c=>{if(c.material?.uniforms){
-    if(c.material.uniforms.uTime)c.material.uniforms.uTime.value=t;
-    if(c.material.uniforms.uFxAmt)c.material.uniforms.uFxAmt.value=fxAmt;
-    if(c.material.uniforms.uFxType)c.material.uniforms.uFxType.value=fxT;
-  }})}
-  
-  // Post-process
-  glitchPass.uniforms.uTime.value=t;
-  glitchPass.uniforms.uGlitchAmt.value=fxT===2?fxAmt:0;
-  glitchPass.uniforms.uFxType.value=fxT;
-  
-  composer.render();
-  
-  if(isRec){frames.push(ren.domElement.toDataURL('image/png'));fCnt++;
-    const fps=parseInt($('fps').value),dur=parseInt($('dur').value),maxF=fps*dur;
-    $('rs').textContent=`● ${fCnt}/${maxF} (${(fCnt/fps).toFixed(1)}s)`;if(fCnt>=maxF)toggleRec()}
+  requestAnimationFrame(loop);const t=clk.getElapsedTime();
+  const camM=$('cam').value;
+  if(camM!=='static'&&!drag){let th,ph;switch(camM){case'orbit':th=t*.3;ph=Math.PI/3.2;break;case'drift':th=t*.08+Math.sin(t*.15)*.5;ph=Math.PI/3+Math.sin(t*.12)*.2;break;case'dramatic':th=t*.2+Math.sin(t*.3)*.8;ph=Math.PI/4+Math.sin(t*.15)*.6;break;case'top':th=t*.15;ph=.3+Math.sin(t*.1)*.15;break;default:th=t*.3;ph=Math.PI/3.2}cT+=(th-cT)*.03;cP+=(ph-cP)*.03}else{cT+=(tT-cT)*.08;cP+=(tP-cP)*.08}
+  const r=cR+(camM==='dramatic'?Math.sin(t*.2)*1.5:0);
+  cam.position.x=Math.sin(cP)*Math.cos(cT)*r;cam.position.y=Math.cos(cP)*r;cam.position.z=Math.sin(cP)*Math.sin(cT)*r;cam.lookAt(0,0,0);
+  const fxV=parseFloat($('fx').value),amtV=$('fxa').value/100;
+  if(grp)grp.traverse(c=>{if(c.material?.uniforms){if(c.material.uniforms.uTime!==undefined)c.material.uniforms.uTime.value=t;if(c.material.uniforms.uFx!==undefined)c.material.uniforms.uFx.value=fxV;if(c.material.uniforms.uAmt!==undefined)c.material.uniforms.uAmt.value=amtV;}});
+  ren.setRenderTarget(renderTarget);ren.render(scene,cam);ren.setRenderTarget(null);
+  postMat.uniforms.tDiffuse.value=renderTarget.texture;postMat.uniforms.uTime.value=t;postMat.uniforms.uGlitch.value=(fxV>1.5&&fxV<2.5)?amtV:0;
+  ren.render(postScene,postCam);
+  if(isRec){frames.push(ren.domElement.toDataURL('image/png'));fCnt++;const fps=parseInt($('fps').value),dur=parseInt($('dur').value),mf=fps*dur;$('rs').textContent=`● ${fCnt}/${mf} (${(fCnt/fps).toFixed(1)}s)`;if(fCnt>=mf)toggleRec()}
 }
 
 function toggleRec(){const b=$('rb');if(!isRec){isRec=true;frames=[];fCnt=0;b.textContent='■ STOP';b.classList.add('rec')}else{isRec=false;b.textContent='PACKING...';b.classList.remove('rec');saveZip()}}
