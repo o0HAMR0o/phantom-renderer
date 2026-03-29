@@ -40,12 +40,15 @@ canvas#cv{display:block;position:fixed;inset:0}
 .btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fff;padding:2px 8px;font-family:'Space Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px;border-radius:3px;transition:all .2s;white-space:nowrap}
 .btn:hover{background:rgba(255,255,255,.08);border-color:rgba(0,200,255,.3)}
 .btn.rec{background:rgba(255,50,50,.2);border-color:rgba(255,50,50,.5);color:#f55;animation:rp 1s infinite}
+.btn.active{background:rgba(0,200,255,.15);border-color:rgba(0,200,255,.5);color:#0cf}
 @keyframes rp{0%,100%{opacity:1}50%{opacity:.5}}
 #bb{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:5px 10px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(0deg,rgba(0,0,0,.5)0%,transparent);pointer-events:none;opacity:0;transition:opacity .5s}
 #bb.vis{opacity:1}
 .nf{font-size:7px;opacity:.2;letter-spacing:1px;pointer-events:auto}
 #rs{font-size:8px;color:#f55;letter-spacing:1px;pointer-events:auto}
 #pb{position:fixed;bottom:0;left:0;height:2px;background:linear-gradient(90deg,#0cf,#f0f);z-index:200;width:0}
+.anim-controls{display:none;gap:4px;align-items:center}
+.anim-controls.show{display:flex}
 </style>
 </head>
 <body>
@@ -57,7 +60,7 @@ canvas#cv{display:block;position:fixed;inset:0}
     <div class="db">OR CLICK TO BROWSE</div>
     <input type="file" accept=".glb,.gltf" id="file-main" style="position:absolute;opacity:0;inset:0;cursor:pointer">
   </div>
-  <div class="hint">GLB / GLTF</div>
+  <div class="hint">GLB / GLTF — static &amp; animated</div>
 </div>
 <div id="ov"><div class="lt">PROCESSING</div><div class="lb"><div class="lf" id="lf"></div></div><div class="ls" id="ls">...</div></div>
 <div id="dz"><span>DROP .GLB FILE</span></div>
@@ -73,6 +76,11 @@ canvas#cv{display:block;position:fixed;inset:0}
     <div class="g"><label>A</label><input type="color" id="ca" value="#00ccff"></div>
     <div class="g"><label>B</label><input type="color" id="cb" value="#ff00ff"></div>
     <div class="g"><label>LIGHT</label><input type="range" id="li" min="0" max="100" value="60"></div>
+    <div class="sp"></div>
+    <div class="anim-controls" id="anim-ui">
+      <div class="g"><label>ANIM</label><select id="anim-sel"></select></div>
+      <button class="btn" id="anim-toggle">▶</button>
+    </div>
     <div class="sp"></div>
     <div class="g"><label>CAM</label><select id="cam"><option value="orbit">ORBIT</option><option value="drift">DRIFT</option><option value="dramatic">DRAMATIC</option><option value="top">TOP</option><option value="static">STATIC</option></select></div>
     <div class="sp"></div>
@@ -99,59 +107,53 @@ const loader=new GLTFLoader();const draco=new DRACOLoader();draco.setDecoderPath
 const sL=(p,t)=>{$('lf').style.width=p+'%';$('ls').textContent=t};
 const showOv=()=>{$('ov').classList.add('show');$('ov').classList.remove('fade')};
 const hideOv=()=>{$('ov').classList.add('fade');setTimeout(()=>$('ov').classList.remove('show'),400)};
-function loadFile(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>loader.parse(e.target.result,'',g=>r(g.scene),j);rd.readAsArrayBuffer(f)})}
 
-// ===== GLSL NOISE =====
+// Returns {scene, animations}
+function loadFile(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>loader.parse(e.target.result,'',g=>r(g),j);rd.readAsArrayBuffer(f)})}
+
+// ===== GLSL =====
 const NOISE_GLSL=`
 vec3 mod289v(vec3 x){return x-floor(x*(1./289.))*289.;}
 vec4 mod289v4(vec4 x){return x-floor(x*(1./289.))*289.;}
 vec4 permute(vec4 x){return mod289v4(((x*34.)+1.)*x);}
-float snoise3(vec3 v){
-  const vec2 C=vec2(1./6.,1./3.);
-  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
-  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;
-  vec3 i1=min(g,l.zxy);vec3 i2=max(g,l.zxy);
-  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-.5;
-  i=mod289v(i);
-  vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
-  vec4 j=p-49.*floor(p/49.);
-  vec4 x_=floor(j/7.);vec4 y_=floor(j-7.*x_);
-  vec4 x=x_/7.-.5;vec4 y=y_/7.-.5;
-  vec4 h=1.-abs(x)-abs(y);
-  vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
-  vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;
-  vec4 sh=-step(h,vec4(0.));
-  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
-  vec4 norm=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
-  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
-  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-}`;
-
-// ===== FX DISPLACEMENT (all uniforms are float) =====
+float snoise3(vec3 v){const vec2 C=vec2(1./6.,1./3.);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g,l.zxy);vec3 i2=max(g,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-.5;i=mod289v(i);vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));vec4 j=p-49.*floor(p/49.);vec4 x_=floor(j/7.);vec4 y_=floor(j-7.*x_);vec4 x=x_/7.-.5;vec4 y=y_/7.-.5;vec4 h=1.-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);vec4 norm=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}`;
 const FX_FUNC=`
-uniform float uTime;
-uniform float uFx;
-uniform float uAmt;
-vec3 fxDisplace(vec3 p,float seed){
-  float fx=uFx;float amt=uAmt;
-  if(fx<0.5||amt<0.001)return p;
-  if(fx<1.5){p.x+=sin(p.y*4.+uTime*2.)*amt*.4;p.z+=cos(p.y*3.5+uTime*1.5)*amt*.35;p.y+=sin(p.x*5.+uTime*1.2)*amt*.15;p.x+=cos(p.z*6.+uTime)*amt*.1;}
-  else if(fx<2.5){float bid=floor((p.y+2.)*6.);float trig=step(.85,fract(sin(bid*91.2+floor(uTime*8.))*4567.));float sh=(fract(sin(bid*173.1+floor(uTime*12.))*999.)-.5)*2.;p.x+=sh*amt*1.8*trig;p.z+=sh*amt*.5*trig*.3;float sc=step(.95,fract(sin(seed*9876.+floor(uTime*15.))*5432.));p+=vec3(fract(sin(seed*111.)*.5)-.25,fract(sin(seed*222.)*.5)-.25,fract(sin(seed*333.)*.5)-.25)*amt*sc*1.5;}
-  else if(fx<3.5){float n1=snoise3(p*1.2+uTime*.4);float n2=snoise3(p*1.8+vec3(100.,0.,0.)+uTime*.35);float n3=snoise3(p*1.5+vec3(0.,100.,0.)+uTime*.45);p+=vec3(n1,n2,n3)*amt*1.2;}
-  else if(fx<4.5){vec3 dir=normalize(p+vec3(.001));float dist=length(p);float wave=sin(dist*5.-uTime*4.)*.5+.5;p+=dir*wave*amt*1.2;p+=dir*snoise3(p*2.+uTime*.5)*amt*.4;}
-  else{float beat=pow(abs(sin(uTime*3.14159*1.5)),2.);p*=1.+beat*amt*.5;p+=normalize(p+vec3(.001))*sin(length(p)*8.-uTime*5.)*.15*amt;}
-  return p;
-}`;
+uniform float uTime;uniform float uFx;uniform float uAmt;
+vec3 fxDisplace(vec3 p,float seed){float fx=uFx;float amt=uAmt;if(fx<0.5||amt<0.001)return p;
+if(fx<1.5){p.x+=sin(p.y*4.+uTime*2.)*amt*.4;p.z+=cos(p.y*3.5+uTime*1.5)*amt*.35;p.y+=sin(p.x*5.+uTime*1.2)*amt*.15;p.x+=cos(p.z*6.+uTime)*amt*.1;}
+else if(fx<2.5){float bid=floor((p.y+2.)*6.);float trig=step(.85,fract(sin(bid*91.2+floor(uTime*8.))*4567.));float sh=(fract(sin(bid*173.1+floor(uTime*12.))*999.)-.5)*2.;p.x+=sh*amt*1.8*trig;p.z+=sh*amt*.5*trig*.3;float sc=step(.95,fract(sin(seed*9876.+floor(uTime*15.))*5432.));p+=vec3(fract(sin(seed*111.)*.5)-.25,fract(sin(seed*222.)*.5)-.25,fract(sin(seed*333.)*.5)-.25)*amt*sc*1.5;}
+else if(fx<3.5){float n1=snoise3(p*1.2+uTime*.4);float n2=snoise3(p*1.8+vec3(100.,0.,0.)+uTime*.35);float n3=snoise3(p*1.5+vec3(0.,100.,0.)+uTime*.45);p+=vec3(n1,n2,n3)*amt*1.2;}
+else if(fx<4.5){vec3 dir=normalize(p+vec3(.001));float wave=sin(length(p)*5.-uTime*4.)*.5+.5;p+=dir*wave*amt*1.2;p+=dir*snoise3(p*2.+uTime*.5)*amt*.4;}
+else{float beat=pow(abs(sin(uTime*3.14159*1.5)),2.);p*=1.+beat*amt*.5;p+=normalize(p+vec3(.001))*sin(length(p)*8.-uTime*5.)*.15*amt;}
+return p;}`;
 
-// ===== SURFACE SAMPLING =====
+// ===== SURFACE SAMPLING (handles SkinnedMesh) =====
 function sampleSurface(root,n){
-  root.updateMatrixWorld(true);const ap=[],ai=[];
-  root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const g=c.geometry,p=g.attributes.position;if(!p)return;
-    const m=c.matrixWorld,v=new THREE.Vector3(),sv=ap.length/3;
-    for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);v.applyMatrix4(m);ap.push(v.x,v.y,v.z)}
-    if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);});
+  root.updateMatrixWorld(true);
+  const ap=[],ai=[];
+  root.traverse(c=>{
+    if(!c.isMesh||!c.geometry)return;
+    const g=c.geometry,p=g.attributes.position;if(!p)return;
+    // For SkinnedMesh, bake the current skeleton pose into world positions
+    let getWorldPos;
+    if(c.isSkinnedMesh){
+      const tempV=new THREE.Vector3();
+      // Use boneTransform to get skinned position
+      getWorldPos=(i)=>{
+        tempV.fromBufferAttribute(p,i);
+        c.boneTransform(i,tempV);
+        tempV.applyMatrix4(c.matrixWorld);
+        return tempV;
+      };
+    }else{
+      const m=c.matrixWorld;const tempV=new THREE.Vector3();
+      getWorldPos=(i)=>{tempV.fromBufferAttribute(p,i);tempV.applyMatrix4(m);return tempV;};
+    }
+    const sv=ap.length/3;
+    for(let i=0;i<p.count;i++){const v=getWorldPos(i);ap.push(v.x,v.y,v.z)}
+    if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);
+    else for(let i=0;i<p.count;i++)ai.push(i+sv);
+  });
   if(!ap.length)return new Float32Array(n*3);
   const pos=new Float32Array(ap),idx=ai,tc=Math.floor(idx.length/3);if(!tc)return new Float32Array(n*3);
   const ar=new Float32Array(tc);let ta=0;
@@ -165,8 +167,27 @@ function sampleSurface(root,n){
     res[s*3]=vA.x*w+vB.x*u+vC.x*v;res[s*3+1]=vA.y*w+vB.y*u+vC.y*v;res[s*3+2]=vA.z*w+vB.z*u+vC.z*v;}
   return res;
 }
-function normalize(s,sz=3.5){s.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s),si=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());const mx=Math.max(si.x,si.y,si.z);if(!mx)return;const sc=sz/mx;s.traverse(ch=>{if(ch.isMesh){ch.geometry.translate(-c.x,-c.y,-c.z);ch.geometry.scale(sc,sc,sc)}});s.position.set(0,0,0);s.scale.set(1,1,1);s.updateMatrixWorld(true)}
-function extractGeo(root){root.updateMatrixWorld(true);const ap=[],ai=[];root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const g=c.geometry,p=g.attributes.position;if(!p)return;const m=c.matrixWorld,v=new THREE.Vector3(),sv=ap.length/3;for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);v.applyMatrix4(m);ap.push(v.x,v.y,v.z)}if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);});const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(ap,3));if(ai.length)geo.setIndex(ai);geo.computeVertexNormals();return geo}
+
+function normalizeScene(s,sz=3.5){
+  s.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s),si=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());
+  const mx=Math.max(si.x,si.y,si.z);if(!mx)return;const sc=sz/mx;
+  // Apply scale to root instead of baking into geometry (preserves skinning)
+  s.scale.multiplyScalar(sc);
+  s.position.set(-c.x*sc,-c.y*sc,-c.z*sc);
+  s.updateMatrixWorld(true);
+}
+
+function extractGeo(root){root.updateMatrixWorld(true);const ap=[],ai=[];
+  root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const g=c.geometry,p=g.attributes.position;if(!p)return;
+    if(c.isSkinnedMesh){const sv=ap.length/3;const tv=new THREE.Vector3();
+      for(let i=0;i<p.count;i++){tv.fromBufferAttribute(p,i);c.boneTransform(i,tv);tv.applyMatrix4(c.matrixWorld);ap.push(tv.x,tv.y,tv.z)}
+      if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);
+    }else{const m=c.matrixWorld,v=new THREE.Vector3(),sv=ap.length/3;
+      for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);v.applyMatrix4(m);ap.push(v.x,v.y,v.z)}
+      if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);}
+  });
+  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(ap,3));if(ai.length)geo.setIndex(ai);geo.computeVertexNormals();return geo}
+
 function addGradient(geo,cA,cB){const pos=geo.attributes.position;let mny=1e9,mxy=-1e9;for(let i=0;i<pos.count;i++){const y=pos.getY(i);if(y<mny)mny=y;if(y>mxy)mxy=y}const ry=mxy-mny||1;const cols=new Float32Array(pos.count*3),rands=new Float32Array(pos.count);for(let i=0;i<pos.count;i++){const t=(pos.getY(i)-mny)/ry;const c=cA.clone().lerp(cB,t);c.offsetHSL((Math.random()-.5)*.03,0,(Math.random()-.5)*.04);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b;rands[i]=Math.random()}geo.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));geo.setAttribute('aR',new THREE.Float32BufferAttribute(rands,1))}
 
 // ===== SHADER BUILDERS =====
@@ -179,13 +200,19 @@ function mkWireOverMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:
 let postScene,postCam,postMat,renderTarget;
 function initPost(){renderTarget=new THREE.WebGLRenderTarget(innerWidth,innerHeight);postScene=new THREE.Scene();postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);postMat=new THREE.ShaderMaterial({uniforms:{tDiffuse:{value:renderTarget.texture},uTime:{value:0},uGlitch:{value:0}},vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,1.);}`,fragmentShader:`uniform sampler2D tDiffuse;uniform float uTime,uGlitch;varying vec2 vUv;float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}void main(){vec2 uv=vUv;vec4 col=texture2D(tDiffuse,uv);if(uGlitch>.01){col.rgb+=sin(uv.y*900.+uTime*3.)*.015*uGlitch;float sp=uGlitch*.012;float bt=step(.88,rand(vec2(floor(uv.y*18.),floor(uTime*7.))));sp+=bt*uGlitch*.035;col.r=texture2D(tDiffuse,uv+vec2(sp,0.)).r;col.b=texture2D(tDiffuse,uv-vec2(sp,0.)).b;float tear=step(.94,rand(vec2(floor(uv.y*25.),floor(uTime*11.))));col=mix(col,texture2D(tDiffuse,vec2(uv.x+tear*.08*uGlitch*sin(uTime*60.),uv.y)),.5+.5*tear);col.rgb+=rand(uv+uTime)*.05*uGlitch;}float vig=1.-dot((vUv-.5)*1.2,(vUv-.5)*1.2);col.rgb*=mix(.72,1.,vig);gl_FragColor=col;}`});postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),postMat))}
 
-// ===== MAIN SCENE =====
+// ===== MAIN STATE =====
 let scene,cam,ren,clk;
 let grp=null,ambL,dirL,dirL2;
 let isRec=false,frames=[],fCnt=0;
 let drag=false,dX=0,dY=0,cT=0,cP=Math.PI/3.2,cR=4.5,tT=0,tP=Math.PI/3.2,tD=0;
 let lastPos=null,lastModel=null;
 const PC=200000;
+
+// Animation state
+let mixer=null,animActions=[],activeAction=null,animPlaying=false;
+let liveScene=null; // The scene with SkinnedMesh for live animation
+let hasAnim=false;
+let resampleInterval=null;
 
 function init(){
   scene=new THREE.Scene();scene.background=new THREE.Color(0);
@@ -222,14 +249,77 @@ function init(){
   $('drop-area').addEventListener('dragover',e=>{e.preventDefault();e.currentTarget.classList.add('over')});
   $('drop-area').addEventListener('dragleave',e=>e.currentTarget.classList.remove('over'));
   $('drop-area').addEventListener('drop',async e=>{e.preventDefault();e.currentTarget.classList.remove('over');const f=e.dataTransfer.files[0];if(f)await processFile(f)});
+  
+  // Animation controls
+  $('anim-toggle').addEventListener('click',()=>{
+    if(!mixer||!activeAction)return;
+    animPlaying=!animPlaying;
+    if(animPlaying){activeAction.paused=false;activeAction.play();$('anim-toggle').textContent='❚❚';$('anim-toggle').classList.add('active')}
+    else{activeAction.paused=true;$('anim-toggle').textContent='▶';$('anim-toggle').classList.remove('active')}
+  });
+  $('anim-sel').addEventListener('change',e=>{
+    const idx=parseInt(e.target.value);
+    if(activeAction)activeAction.stop();
+    activeAction=animActions[idx];
+    if(activeAction){activeAction.reset().play();if(!animPlaying)activeAction.paused=true;}
+  });
 }
 
 async function processFile(f){
   $('upload').classList.add('gone');showOv();sL(10,'READING...');await tick();
-  try{const scn=await loadFile(f);sL(35,'NORMALIZING...');await tick();normalize(scn,3.5);lastModel=scn.clone(true);lastModel.updateMatrixWorld(true);
-    sL(55,'SAMPLING...');await tick();lastPos=sampleSurface(scn,PC);sL(88,'RENDERING...');await tick();applyMode();sL(100,'');await tick();hideOv();
-    $('top').classList.add('vis');$('bb').classList.add('vis');$('info').textContent=f.name.replace(/\.\w+$/,'');}
-  catch(e){console.error(e);sL(0,'ERROR');setTimeout(()=>{hideOv();$('upload').classList.remove('gone')},2000)}
+  try{
+    const gltf=await loadFile(f);
+    const scn=gltf.scene;
+    const anims=gltf.animations||[];
+    
+    sL(30,'NORMALIZING...');await tick();
+    normalizeScene(scn,3.5);
+    
+    // Store the live scene (with skinning intact) for animation
+    liveScene=scn;
+    // Also keep a reference for static sampling
+    lastModel=scn;
+    
+    // Setup animation
+    if(resampleInterval){clearInterval(resampleInterval);resampleInterval=null}
+    mixer=null;animActions=[];activeAction=null;animPlaying=false;hasAnim=anims.length>0;
+    
+    if(hasAnim){
+      mixer=new THREE.AnimationMixer(scn);
+      const sel=$('anim-sel');sel.innerHTML='';
+      anims.forEach((clip,i)=>{
+        const action=mixer.clipAction(clip);
+        action.setLoop(THREE.LoopRepeat);
+        animActions.push(action);
+        const opt=document.createElement('option');opt.value=i;opt.textContent=clip.name||`Clip ${i}`;sel.appendChild(opt);
+      });
+      activeAction=animActions[0];
+      activeAction.reset().play();animPlaying=true;
+      $('anim-toggle').textContent='❚❚';$('anim-toggle').classList.add('active');
+      $('anim-ui').classList.add('show');
+    }else{
+      $('anim-ui').classList.remove('show');
+    }
+    
+    sL(55,'SAMPLING...');await tick();
+    lastPos=sampleSurface(scn,PC);
+    sL(88,'RENDERING...');await tick();
+    applyMode();
+    
+    // For animated models, re-sample particles periodically
+    if(hasAnim){
+      resampleInterval=setInterval(()=>{
+        if(!animPlaying||$('mode').value!=='particles')return;
+        liveScene.updateMatrixWorld(true);
+        lastPos=sampleSurface(liveScene,PC);
+        applyMode();
+      },200); // Resample every 200ms for smooth animation
+    }
+    
+    sL(100,'');await tick();hideOv();
+    $('top').classList.add('vis');$('bb').classList.add('vis');
+    $('info').textContent=f.name.replace(/\.\w+$/,'')+(hasAnim?' — ANIMATED':'');
+  }catch(e){console.error(e);sL(0,'ERROR: '+e.message);setTimeout(()=>{hideOv();$('upload').classList.remove('gone')},2000)}
 }
 
 function applyMode(){
@@ -237,24 +327,38 @@ function applyMode(){
   const mode=$('mode').value,fxV=parseFloat($('fx').value),amtV=$('fxa').value/100;
   const cA=new THREE.Color($('ca').value),cB=new THREE.Color($('cb').value);
   grp=new THREE.Group();
+  
   if(mode==='particles'&&lastPos){
-    const pos=lastPos,cnt=pos.length/3,geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos.slice(),3));
+    const pos=lastPos,cnt=pos.length/3,geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.BufferAttribute(pos.slice(),3));
     let mny=1e9,mxy=-1e9;for(let i=0;i<cnt;i++){const y=pos[i*3+1];if(y<mny)mny=y;if(y>mxy)mxy=y}const ry=mxy-mny||1;
     const rands=new Float32Array(cnt),cols=new Float32Array(cnt*3);
     for(let i=0;i<cnt;i++){rands[i]=Math.random();const t=(pos[i*3+1]-mny)/ry;const c=cA.clone().lerp(cB,t);c.offsetHSL((Math.random()-.5)*.03,0,(Math.random()-.5)*.04);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b}
     geo.setAttribute('aR',new THREE.BufferAttribute(rands,1));geo.setAttribute('color',new THREE.BufferAttribute(cols,3));
     grp.add(new THREE.Points(geo,mkPtsMat(fxV,amtV)));
-  }else if(mode==='mesh'&&lastModel){
-    const geo=extractGeo(lastModel);addGradient(geo,cA,cB);grp.add(new THREE.Mesh(geo,mkWireMat(fxV,amtV)));
-  }else if(mode==='solid'&&lastModel){
-    const geo=extractGeo(lastModel);addGradient(geo,cA,cB);grp.add(new THREE.Mesh(geo,mkSolidMat(fxV,amtV)));
-    const wg=geo.clone();wg.setAttribute('aR',geo.attributes.aR.clone());grp.add(new THREE.Mesh(wg,mkWireOverMat(fxV,amtV)));
+  }else if((mode==='mesh'||mode==='solid')&&lastModel){
+    // For animated: extract current pose geometry
+    liveScene.updateMatrixWorld(true);
+    const geo=extractGeo(liveScene);addGradient(geo,cA,cB);
+    if(mode==='mesh'){grp.add(new THREE.Mesh(geo,mkWireMat(fxV,amtV)))}
+    else{grp.add(new THREE.Mesh(geo,mkSolidMat(fxV,amtV)));
+      const wg=geo.clone();wg.setAttribute('aR',geo.attributes.aR.clone());grp.add(new THREE.Mesh(wg,mkWireOverMat(fxV,amtV)))}
   }
   scene.add(grp);
 }
 
 function loop(){
-  requestAnimationFrame(loop);const t=clk.getElapsedTime();
+  requestAnimationFrame(loop);
+  const dt=clk.getDelta();const t=clk.getElapsedTime();
+  
+  // Update animation mixer
+  if(mixer&&animPlaying)mixer.update(dt);
+  
+  // For mesh/solid with animation, re-extract geometry each frame
+  if(hasAnim&&animPlaying&&($('mode').value==='mesh'||$('mode').value==='solid')){
+    applyMode();
+  }
+  
   const camM=$('cam').value;
   if(camM!=='static'&&!drag){let th,ph;switch(camM){case'orbit':th=t*.3;ph=Math.PI/3.2;break;case'drift':th=t*.08+Math.sin(t*.15)*.5;ph=Math.PI/3+Math.sin(t*.12)*.2;break;case'dramatic':th=t*.2+Math.sin(t*.3)*.8;ph=Math.PI/4+Math.sin(t*.15)*.6;break;case'top':th=t*.15;ph=.3+Math.sin(t*.1)*.15;break;default:th=t*.3;ph=Math.PI/3.2}cT+=(th-cT)*.03;cP+=(ph-cP)*.03}else{cT+=(tT-cT)*.08;cP+=(tP-cP)*.08}
   const r=cR+(camM==='dramatic'?Math.sin(t*.2)*1.5:0);
