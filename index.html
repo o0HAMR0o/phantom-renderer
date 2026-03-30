@@ -11,12 +11,11 @@ body{background:#000;overflow:hidden;font-family:'Space Mono',monospace;color:#f
 canvas#cv{display:block;position:fixed;inset:0}
 #upload{position:fixed;inset:0;z-index:600;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;transition:opacity .5s}
 #upload.gone{opacity:0;pointer-events:none}
-#upload .logo{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;letter-spacing:6px;background:linear-gradient(135deg,#0cf,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:28px}
-.drop{width:320px;height:200px;border:2px dashed rgba(255,255,255,.15);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:all .3s;position:relative}
+#upload .logo{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;letter-spacing:6px;background:linear-gradient(135deg,#0cf,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px}
+.drop{width:340px;height:180px;border:2px dashed rgba(255,255,255,.15);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all .3s;position:relative}
 .drop:hover,.drop.over{border-color:#0cf;background:rgba(0,200,255,.04)}
-.drop svg{opacity:.3}.drop .dt{font-size:11px;opacity:.4;letter-spacing:2px}
-.drop .db{font-size:10px;padding:6px 18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:4px}
-#upload .hint{margin-top:16px;font-size:9px;opacity:.2;letter-spacing:1px}
+.drop svg{opacity:.3}.drop .dt{font-size:11px;opacity:.4;letter-spacing:2px}.drop .db{font-size:10px;padding:5px 16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:4px}
+#upload .hint{margin-top:14px;font-size:8px;opacity:.2;letter-spacing:1px}
 #ov{position:fixed;inset:0;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:500;transition:opacity .4s}
 #ov.show{display:flex}#ov.fade{opacity:0}
 #ov .lt{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;background:linear-gradient(90deg,#0cf,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
@@ -25,56 +24,69 @@ canvas#cv{display:block;position:fixed;inset:0}
 #ov .ls{margin-top:8px;font-size:8px;opacity:.3;letter-spacing:2px}
 #dz{position:fixed;inset:0;z-index:700;background:rgba(0,200,255,.05);border:2px dashed rgba(0,200,255,.3);display:none;align-items:center;justify-content:center}
 #dz.s{display:flex}#dz span{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:3px;color:#0cf}
-#top{position:fixed;top:0;left:0;right:0;z-index:100;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(0,0,0,.94)0%,rgba(0,0,0,.5)60%,transparent);pointer-events:none;opacity:0;transition:opacity .5s}
+#top{position:fixed;top:0;left:0;right:0;z-index:100;padding:6px 8px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(0,0,0,.95)0%,rgba(0,0,0,.5)65%,transparent);pointer-events:none;opacity:0;transition:opacity .5s}
 #top.vis{opacity:1}#top>*{pointer-events:auto}
-.logo-sm{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#0cf,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.row{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.g{display:flex;align-items:center;gap:3px;padding:2px 5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:3px}
-.g label{font-size:6.5px;letter-spacing:.8px;opacity:.35;text-transform:uppercase;white-space:nowrap}
-.g select,.g input[type=number]{background:transparent;border:none;color:#fff;font-family:'Space Mono',monospace;font-size:8px;outline:none}
+.logo-sm{font-family:'Orbitron',sans-serif;font-size:8px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#0cf,#f0f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.row{display:flex;gap:3px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.g{display:flex;align-items:center;gap:2px;padding:1px 4px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:2px}
+.g label{font-size:6px;letter-spacing:.6px;opacity:.3;text-transform:uppercase;white-space:nowrap}
+.g select,.g input[type=number]{background:transparent;border:none;color:#fff;font-family:'Space Mono',monospace;font-size:7px;outline:none}
 .g select{cursor:pointer}.g select option{background:#111}
-.g input[type=color]{width:16px;height:16px;border:1px solid rgba(255,255,255,.1);background:none;cursor:pointer;padding:0;border-radius:2px}
-.g input[type=number]{width:28px;text-align:center}
-.g input[type=range]{width:50px;height:2px;accent-color:#0cf}
-.sp{width:1px;height:12px;background:rgba(255,255,255,.06)}
-.btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fff;padding:2px 8px;font-family:'Space Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px;border-radius:3px;transition:all .2s;white-space:nowrap}
-.btn:hover{background:rgba(255,255,255,.08);border-color:rgba(0,200,255,.3)}
-.btn.rec{background:rgba(255,50,50,.2);border-color:rgba(255,50,50,.5);color:#f55;animation:rp 1s infinite}
-.btn.active{background:rgba(0,200,255,.15);border-color:rgba(0,200,255,.5);color:#0cf}
+.g input[type=color]{width:14px;height:14px;border:1px solid rgba(255,255,255,.08);background:none;cursor:pointer;padding:0;border-radius:1px}
+.g input[type=number]{width:24px;text-align:center}
+.g input[type=range]{width:40px;height:2px;accent-color:#0cf}
+.sp{width:1px;height:10px;background:rgba(255,255,255,.05)}
+.btn{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);color:#fff;padding:1px 6px;font-family:'Space Mono',monospace;font-size:7px;cursor:pointer;letter-spacing:.8px;border-radius:2px;transition:all .2s;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.07);border-color:rgba(0,200,255,.3)}
+.btn.rec{background:rgba(255,50,50,.18);border-color:rgba(255,50,50,.4);color:#f55;animation:rp 1s infinite}
+.btn.active{background:rgba(0,200,255,.12);border-color:rgba(0,200,255,.4);color:#0cf}
 @keyframes rp{0%,100%{opacity:1}50%{opacity:.5}}
-#bb{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:5px 10px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(0deg,rgba(0,0,0,.5)0%,transparent);pointer-events:none;opacity:0;transition:opacity .5s}
+#bb{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:4px 8px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(0deg,rgba(0,0,0,.4)0%,transparent);pointer-events:none;opacity:0;transition:opacity .5s}
 #bb.vis{opacity:1}
-.nf{font-size:7px;opacity:.2;letter-spacing:1px;pointer-events:auto}
-#rs{font-size:8px;color:#f55;letter-spacing:1px;pointer-events:auto}
+.nf{font-size:6px;opacity:.2;letter-spacing:1px;pointer-events:auto}
+#rs{font-size:7px;color:#f55;letter-spacing:1px;pointer-events:auto}
 #pb{position:fixed;bottom:0;left:0;height:2px;background:linear-gradient(90deg,#0cf,#f0f);z-index:200;width:0}
-.anim-controls{display:none;gap:4px;align-items:center}
-.anim-controls.show{display:flex}
+.anim-controls{display:none;gap:3px;align-items:center}.anim-controls.show{display:flex}
+#audio-viz{position:fixed;bottom:30px;left:8px;width:120px;height:30px;z-index:90;opacity:.4;pointer-events:none;display:none}
+#audio-viz.show{display:block}
 </style>
 </head>
 <body>
 <div id="upload">
   <div class="logo">PHANTOM RENDERER</div>
   <div class="drop" id="drop-area">
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
     <div class="dt">DROP .GLB FILE HERE</div>
     <div class="db">OR CLICK TO BROWSE</div>
     <input type="file" accept=".glb,.gltf" id="file-main" style="position:absolute;opacity:0;inset:0;cursor:pointer">
   </div>
-  <div class="hint">GLB / GLTF — static &amp; animated</div>
+  <div class="hint">GLB / GLTF — static &amp; animated / optional: upload audio for reactive FX</div>
 </div>
 <div id="ov"><div class="lt">PROCESSING</div><div class="lb"><div class="lf" id="lf"></div></div><div class="ls" id="ls">...</div></div>
-<div id="dz"><span>DROP .GLB FILE</span></div>
+<div id="dz"><span>DROP FILE</span></div>
 <canvas id="cv"></canvas>
+<canvas id="audio-viz" width="120" height="30"></canvas>
 <div id="top">
   <div class="logo-sm">PHANTOM RENDERER</div>
   <div class="row">
-    <div class="g"><label>MODE</label><select id="mode"><option value="particles">PARTICLES</option><option value="mesh">MESH</option><option value="solid">SOLID</option></select></div>
-    <div class="sp"></div>
-    <div class="g"><label>FX</label><select id="fx"><option value="0">NONE</option><option value="1">WAVE</option><option value="2">GLITCH</option><option value="3">DISTORT</option><option value="4">EXPLODE</option><option value="5">PULSE</option></select></div>
-    <div class="g"><label>AMT</label><input type="range" id="fxa" min="0" max="100" value="50"></div>
-    <div class="sp"></div>
+    <div class="g"><label>MODE</label><select id="mode">
+      <option value="original">ORIGINAL</option><option value="particles">PARTICLES</option><option value="mesh">MESH</option><option value="solid">SOLID</option>
+      <option value="pointlines">PTS+LINES</option><option value="xray">X-RAY</option>
+    </select></div>
+    <button class="btn" id="tex-toggle" title="Use original texture colors">TEX</button>
+    <div class="g"><label>COLOR</label><select id="colormode">
+      <option value="gradient">GRADIENT</option><option value="rainbow">RAINBOW</option><option value="mono">MONO</option>
+      <option value="heat">HEAT</option><option value="depth">DEPTH</option><option value="fresnel">FRESNEL</option>
+    </select></div>
     <div class="g"><label>A</label><input type="color" id="ca" value="#00ccff"></div>
     <div class="g"><label>B</label><input type="color" id="cb" value="#ff00ff"></div>
+    <div class="sp"></div>
+    <div class="g"><label>FX</label><select id="fx">
+      <option value="0">NONE</option><option value="1">WAVE</option><option value="2">GLITCH</option>
+      <option value="3">DISTORT</option><option value="4">EXPLODE</option><option value="5">PULSE</option>
+      <option value="6">SHATTER</option><option value="7">SPIRAL</option>
+    </select></div>
+    <div class="g"><label>AMT</label><input type="range" id="fxa" min="0" max="100" value="50"></div>
     <div class="g"><label>LIGHT</label><input type="range" id="li" min="0" max="100" value="60"></div>
     <div class="sp"></div>
     <div class="anim-controls" id="anim-ui">
@@ -82,10 +94,23 @@ canvas#cv{display:block;position:fixed;inset:0}
       <button class="btn" id="anim-toggle">▶</button>
     </div>
     <div class="sp"></div>
+    <div class="g"><label>RX</label><input type="range" id="rx" min="-180" max="180" value="0" style="width:40px"></div>
+    <div class="g"><label>RY</label><input type="range" id="ry" min="-180" max="180" value="0" style="width:40px"></div>
+    <div class="g"><label>RZ</label><input type="range" id="rz" min="-180" max="180" value="0" style="width:40px"></div>
+    <button class="btn" id="rot-reset" title="Reset rotation">⟲</button>
+    <div class="sp"></div>
     <div class="g"><label>CAM</label><select id="cam"><option value="orbit">ORBIT</option><option value="drift">DRIFT</option><option value="dramatic">DRAMATIC</option><option value="top">TOP</option><option value="static">STATIC</option></select></div>
     <div class="sp"></div>
     <label class="btn" style="position:relative;overflow:hidden">GLB<input type="file" accept=".glb,.gltf" id="file-new" style="position:absolute;opacity:0;inset:0;cursor:pointer"></label>
-    <div class="g"><label>SEC</label><input type="number" id="dur" value="5" min="1" max="60"></div>
+    <label class="btn" style="position:relative;overflow:hidden" id="audio-btn">♪ AUDIO<input type="file" accept="audio/*" id="file-audio" style="position:absolute;opacity:0;inset:0;cursor:pointer"></label>
+    <button class="btn" id="audio-play" style="display:none" title="Play/Pause audio">▶♪</button>
+    <div class="g" id="audio-time-g" style="display:none"><label>♪START</label><input type="number" id="audio-start" value="0" min="0" step="0.1" style="width:36px"><label>s</label></div>
+    <div class="sp"></div>
+    <button class="btn" id="auto-fx" title="Auto-cycle FX on beat">AUTO</button>
+    <button class="btn" id="random-btn" title="Randomize all settings">🎲</button>
+    <div class="sp"></div>
+    <div class="g"><label>FROM</label><input type="number" id="rec-from" value="0" min="0" step="0.1" style="width:36px"><label>s</label></div>
+    <div class="g"><label>TO</label><input type="number" id="rec-to" value="5" min="0.1" step="0.1" style="width:36px"><label>s</label></div>
     <div class="g"><label>FPS</label><select id="fps"><option value="24">24</option><option value="30">30</option></select></div>
     <button class="btn" id="rb">● REC</button>
   </div>
@@ -107,9 +132,51 @@ const loader=new GLTFLoader();const draco=new DRACOLoader();draco.setDecoderPath
 const sL=(p,t)=>{$('lf').style.width=p+'%';$('ls').textContent=t};
 const showOv=()=>{$('ov').classList.add('show');$('ov').classList.remove('fade')};
 const hideOv=()=>{$('ov').classList.add('fade');setTimeout(()=>$('ov').classList.remove('show'),400)};
-
-// Returns {scene, animations}
 function loadFile(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>loader.parse(e.target.result,'',g=>r(g),j);rd.readAsArrayBuffer(f)})}
+
+// ===== AUDIO REACTIVE =====
+let audioCtx=null,analyser=null,audioSource=null,audioElement=null,audioData=null;
+let audioBass=0,audioMid=0,audioHigh=0,audioEnergy=0;
+
+function setupAudio(file){
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioElement){audioElement.pause();audioElement.remove()}
+  audioElement=document.createElement('audio');
+  audioElement.src=URL.createObjectURL(file);
+  audioElement.loop=true;
+  if(audioSource){try{audioSource.disconnect()}catch(e){}}
+  audioSource=audioCtx.createMediaElementSource(audioElement);
+  analyser=audioCtx.createAnalyser();
+  analyser.fftSize=512;analyser.smoothingTimeConstant=.8;
+  audioSource.connect(analyser);analyser.connect(audioCtx.destination);
+  audioData=new Uint8Array(analyser.frequencyBinCount);
+  audioElement.play();
+  $('audio-viz').classList.add('show');
+  $('audio-btn').classList.add('active');
+  $('audio-time-g').style.display='flex';
+  $('audio-play').style.display='inline-block';
+  $('audio-play').textContent='❚❚♪';
+  $('audio-play').classList.add('active');
+}
+
+function updateAudio(){
+  if(!analyser||!audioData)return;
+  analyser.getByteFrequencyData(audioData);
+  const len=audioData.length;
+  let bass=0,mid=0,high=0;
+  const bEnd=Math.floor(len*.1),mEnd=Math.floor(len*.4);
+  for(let i=0;i<bEnd;i++)bass+=audioData[i];
+  for(let i=bEnd;i<mEnd;i++)mid+=audioData[i];
+  for(let i=mEnd;i<len;i++)high+=audioData[i];
+  audioBass=bass/(bEnd*255);audioMid=mid/((mEnd-bEnd)*255);audioHigh=high/((len-mEnd)*255);
+  audioEnergy=(audioBass+audioMid+audioHigh)/3;
+  // Draw mini visualizer
+  const cv=$('audio-viz'),ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const bw=cv.width/64;
+  for(let i=0;i<64;i++){const v=audioData[Math.floor(i*len/64)]/255;
+    ctx.fillStyle=`hsl(${180+v*120},.8,.5)`;ctx.fillRect(i*bw,cv.height*(1-v),bw-1,cv.height*v)}
+}
 
 // ===== GLSL =====
 const NOISE_GLSL=`
@@ -117,43 +184,63 @@ vec3 mod289v(vec3 x){return x-floor(x*(1./289.))*289.;}
 vec4 mod289v4(vec4 x){return x-floor(x*(1./289.))*289.;}
 vec4 permute(vec4 x){return mod289v4(((x*34.)+1.)*x);}
 float snoise3(vec3 v){const vec2 C=vec2(1./6.,1./3.);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g,l.zxy);vec3 i2=max(g,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-.5;i=mod289v(i);vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));vec4 j=p-49.*floor(p/49.);vec4 x_=floor(j/7.);vec4 y_=floor(j-7.*x_);vec4 x=x_/7.-.5;vec4 y=y_/7.-.5;vec4 h=1.-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);vec4 norm=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}`;
+
+// FX with 7 effects (0=none,1=wave,2=glitch,3=distort,4=explode,5=pulse,6=shatter,7=spiral)
+// + audio uniforms
 const FX_FUNC=`
 uniform float uTime;uniform float uFx;uniform float uAmt;
-vec3 fxDisplace(vec3 p,float seed){float fx=uFx;float amt=uAmt;if(fx<0.5||amt<0.001)return p;
-if(fx<1.5){p.x+=sin(p.y*4.+uTime*2.)*amt*.4;p.z+=cos(p.y*3.5+uTime*1.5)*amt*.35;p.y+=sin(p.x*5.+uTime*1.2)*amt*.15;p.x+=cos(p.z*6.+uTime)*amt*.1;}
-else if(fx<2.5){float bid=floor((p.y+2.)*6.);float trig=step(.85,fract(sin(bid*91.2+floor(uTime*8.))*4567.));float sh=(fract(sin(bid*173.1+floor(uTime*12.))*999.)-.5)*2.;p.x+=sh*amt*1.8*trig;p.z+=sh*amt*.5*trig*.3;float sc=step(.95,fract(sin(seed*9876.+floor(uTime*15.))*5432.));p+=vec3(fract(sin(seed*111.)*.5)-.25,fract(sin(seed*222.)*.5)-.25,fract(sin(seed*333.)*.5)-.25)*amt*sc*1.5;}
-else if(fx<3.5){float n1=snoise3(p*1.2+uTime*.4);float n2=snoise3(p*1.8+vec3(100.,0.,0.)+uTime*.35);float n3=snoise3(p*1.5+vec3(0.,100.,0.)+uTime*.45);p+=vec3(n1,n2,n3)*amt*1.2;}
-else if(fx<4.5){vec3 dir=normalize(p+vec3(.001));float wave=sin(length(p)*5.-uTime*4.)*.5+.5;p+=dir*wave*amt*1.2;p+=dir*snoise3(p*2.+uTime*.5)*amt*.4;}
-else{float beat=pow(abs(sin(uTime*3.14159*1.5)),2.);p*=1.+beat*amt*.5;p+=normalize(p+vec3(.001))*sin(length(p)*8.-uTime*5.)*.15*amt;}
-return p;}`;
+uniform float uBass;uniform float uMid;uniform float uHigh;
+// Nonlinear audio response: silent below threshold, exponential above
+float audioReact(float v, float thresh, float power){
+  float x=max(0.,v-thresh)/(1.-thresh+.001);
+  return pow(x,power);
+}
+vec3 fxDisplace(vec3 p,float seed){
+  float fx=uFx;float amt=uAmt;
+  // Audio: threshold .25 means below 25% loudness = zero effect
+  // power 2.0 = quadratic curve so only strong beats really punch through
+  float aB=audioReact(uBass,.2,2.);
+  float aM=audioReact(uMid,.25,2.);
+  float aH=audioReact(uHigh,.3,2.5);
+  // Audio adds to amt: strong bass can add up to +0.5
+  amt+=aB*.5+aM*.2+aH*.1;
+  amt=min(amt,2.5);
+  if(fx<0.5||amt<0.001)return p;
+  if(fx<1.5){p.x+=sin(p.y*4.+uTime*2.)*amt*.4;p.z+=cos(p.y*3.5+uTime*1.5)*amt*.35;p.y+=sin(p.x*5.+uTime*1.2)*amt*.15+aB*.6;}
+  else if(fx<2.5){float bid=floor((p.y+2.)*6.);float trig=step(.85-aH*.5,fract(sin(bid*91.2+floor(uTime*8.))*4567.));float sh=(fract(sin(bid*173.1+floor(uTime*12.))*999.)-.5)*2.;p.x+=sh*amt*1.8*trig;float sc=step(.95-aH*.4,fract(sin(seed*9876.+floor(uTime*15.))*5432.));p+=vec3(fract(sin(seed*111.)*.5)-.25,fract(sin(seed*222.)*.5)-.25,fract(sin(seed*333.)*.5)-.25)*amt*sc*1.5;}
+  else if(fx<3.5){float n1=snoise3(p*1.2+uTime*.4);float n2=snoise3(p*1.8+vec3(100.,0.,0.)+uTime*.35);float n3=snoise3(p*1.5+vec3(0.,100.,0.)+uTime*.45);p+=vec3(n1,n2,n3)*amt*(1.+aB*2.)*1.2;}
+  else if(fx<4.5){vec3 dir=normalize(p+vec3(.001));float wave=sin(length(p)*5.-uTime*4.)*.5+.5;p+=dir*wave*amt*(1.+aB*3.)*1.2;}
+  else if(fx<5.5){float beat=pow(abs(sin(uTime*3.14159*1.5)),2.)+aB*2.;p*=1.+beat*amt*.5;p+=normalize(p+vec3(.001))*sin(length(p)*8.-uTime*5.)*.15*amt;}
+  else if(fx<6.5){float cell=floor(seed*20.);float burst=step(.7-aB*.4,fract(sin(cell*77.7+floor(uTime*3.))*999.));vec3 dir=normalize(vec3(fract(sin(cell*11.)*.5)-.25,fract(sin(cell*22.)*.5)-.25,fract(sin(cell*33.)*.5)-.25));p+=dir*burst*amt*(2.+aB*4.);p.y-=burst*amt*.5;}
+  else{float a=atan(p.z,p.x);float r=length(p.xz);float twist=amt*(2.+aM*4.)*sin(p.y*2.+uTime);a+=twist;p.x=cos(a)*r;p.z=sin(a)*r;p.y+=sin(r*4.-uTime*3.)*.2*amt;}
+  return p;
+}`;
 
-// ===== SURFACE SAMPLING (handles SkinnedMesh) =====
+// ===== COLOR MODE GLSL =====
+// Injected as a function that takes position, normal, seed and returns vec3 color
+function getColorGLSL(){return `
+uniform float uColorMode; // 0=gradient,1=rainbow,2=mono,3=heat,4=depth,5=fresnel
+uniform vec3 uColA;uniform vec3 uColB;
+uniform float uMinY;uniform float uMaxY;
+vec3 hsl2rgb(float h,float s,float l){vec3 c=clamp(abs(mod(h*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.);return l+s*(c-.5)*(1.-abs(2.*l-1.));}
+vec3 getColor(vec3 pos,vec3 norm,float seed,vec3 viewDir){
+  float t=(pos.y-uMinY)/(uMaxY-uMinY+.001);
+  if(uColorMode<0.5)return mix(uColA,uColB,t); // gradient
+  if(uColorMode<1.5)return hsl2rgb(t*.85+seed*.1,1.,.55); // rainbow
+  if(uColorMode<2.5){float v=t*.5+.3;return vec3(v)*uColA/max(max(uColA.r,uColA.g),uColA.b+.01);} // mono
+  if(uColorMode<3.5){return mix(vec3(0.,.1,.4),mix(vec3(1.,.3,0.),vec3(1.,1.,.2),t),t);} // heat
+  if(uColorMode<4.5){float d=length(pos)*.3;return mix(uColA,uColB,clamp(d,0.,1.));} // depth
+  float f=pow(1.-abs(dot(normalize(norm),viewDir)),2.);return mix(uColA*.2,uColB,f); // fresnel
+}`;}
+
+// ===== SURFACE SAMPLING =====
 function sampleSurface(root,n){
-  root.updateMatrixWorld(true);
-  const ap=[],ai=[];
-  root.traverse(c=>{
-    if(!c.isMesh||!c.geometry)return;
-    const g=c.geometry,p=g.attributes.position;if(!p)return;
-    // For SkinnedMesh, bake the current skeleton pose into world positions
-    let getWorldPos;
-    if(c.isSkinnedMesh){
-      const tempV=new THREE.Vector3();
-      // Use boneTransform to get skinned position
-      getWorldPos=(i)=>{
-        tempV.fromBufferAttribute(p,i);
-        c.boneTransform(i,tempV);
-        tempV.applyMatrix4(c.matrixWorld);
-        return tempV;
-      };
-    }else{
-      const m=c.matrixWorld;const tempV=new THREE.Vector3();
-      getWorldPos=(i)=>{tempV.fromBufferAttribute(p,i);tempV.applyMatrix4(m);return tempV;};
-    }
-    const sv=ap.length/3;
-    for(let i=0;i<p.count;i++){const v=getWorldPos(i);ap.push(v.x,v.y,v.z)}
-    if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);
-    else for(let i=0;i<p.count;i++)ai.push(i+sv);
-  });
+  root.updateMatrixWorld(true);const ap=[],ai=[];
+  root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const g=c.geometry,p=g.attributes.position;if(!p)return;
+    let getP;if(c.isSkinnedMesh){const tv=new THREE.Vector3();getP=i=>{tv.fromBufferAttribute(p,i);c.boneTransform(i,tv);tv.applyMatrix4(c.matrixWorld);return tv}}
+    else{const m=c.matrixWorld,tv=new THREE.Vector3();getP=i=>{tv.fromBufferAttribute(p,i);tv.applyMatrix4(m);return tv}}
+    const sv=ap.length/3;for(let i=0;i<p.count;i++){const v=getP(i);ap.push(v.x,v.y,v.z)}
+    if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);});
   if(!ap.length)return new Float32Array(n*3);
   const pos=new Float32Array(ap),idx=ai,tc=Math.floor(idx.length/3);if(!tc)return new Float32Array(n*3);
   const ar=new Float32Array(tc);let ta=0;
@@ -167,217 +254,566 @@ function sampleSurface(root,n){
     res[s*3]=vA.x*w+vB.x*u+vC.x*v;res[s*3+1]=vA.y*w+vB.y*u+vC.y*v;res[s*3+2]=vA.z*w+vB.z*u+vC.z*v;}
   return res;
 }
-
-function normalizeScene(s,sz=3.5){
-  s.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s),si=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());
-  const mx=Math.max(si.x,si.y,si.z);if(!mx)return;const sc=sz/mx;
-  // Apply scale to root instead of baking into geometry (preserves skinning)
-  s.scale.multiplyScalar(sc);
-  s.position.set(-c.x*sc,-c.y*sc,-c.z*sc);
-  s.updateMatrixWorld(true);
-}
-
+function normalizeScene(s,sz=3.5){s.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(s),si=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());const mx=Math.max(si.x,si.y,si.z);if(!mx)return;const sc=sz/mx;s.scale.multiplyScalar(sc);s.position.set(-c.x*sc,-c.y*sc,-c.z*sc);s.updateMatrixWorld(true)}
 function extractGeo(root){root.updateMatrixWorld(true);const ap=[],ai=[];
   root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const g=c.geometry,p=g.attributes.position;if(!p)return;
-    if(c.isSkinnedMesh){const sv=ap.length/3;const tv=new THREE.Vector3();
-      for(let i=0;i<p.count;i++){tv.fromBufferAttribute(p,i);c.boneTransform(i,tv);tv.applyMatrix4(c.matrixWorld);ap.push(tv.x,tv.y,tv.z)}
-      if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);
-    }else{const m=c.matrixWorld,v=new THREE.Vector3(),sv=ap.length/3;
-      for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);v.applyMatrix4(m);ap.push(v.x,v.y,v.z)}
-      if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv);}
-  });
+    if(c.isSkinnedMesh){const sv=ap.length/3,tv=new THREE.Vector3();for(let i=0;i<p.count;i++){tv.fromBufferAttribute(p,i);c.boneTransform(i,tv);tv.applyMatrix4(c.matrixWorld);ap.push(tv.x,tv.y,tv.z)}if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv)}
+    else{const m=c.matrixWorld,v=new THREE.Vector3(),sv=ap.length/3;for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);v.applyMatrix4(m);ap.push(v.x,v.y,v.z)}if(g.index)for(let i=0;i<g.index.count;i++)ai.push(g.index.getX(i)+sv);else for(let i=0;i<p.count;i++)ai.push(i+sv)}});
   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(ap,3));if(ai.length)geo.setIndex(ai);geo.computeVertexNormals();return geo}
+function getBounds(pos){let mny=1e9,mxy=-1e9;const cnt=pos.count||pos.length/3;for(let i=0;i<cnt;i++){const y=pos.getY?pos.getY(i):pos[i*3+1];if(y<mny)mny=y;if(y>mxy)mxy=y}return{mny,mxy}}
+function addAttribs(geo){const rands=new Float32Array(geo.attributes.position.count);for(let i=0;i<rands.length;i++)rands[i]=Math.random();geo.setAttribute('aR',new THREE.Float32BufferAttribute(rands,1))}
 
-function addGradient(geo,cA,cB){const pos=geo.attributes.position;let mny=1e9,mxy=-1e9;for(let i=0;i<pos.count;i++){const y=pos.getY(i);if(y<mny)mny=y;if(y>mxy)mxy=y}const ry=mxy-mny||1;const cols=new Float32Array(pos.count*3),rands=new Float32Array(pos.count);for(let i=0;i<pos.count;i++){const t=(pos.getY(i)-mny)/ry;const c=cA.clone().lerp(cB,t);c.offsetHSL((Math.random()-.5)*.03,0,(Math.random()-.5)*.04);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b;rands[i]=Math.random()}geo.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));geo.setAttribute('aR',new THREE.Float32BufferAttribute(rands,1))}
+// ===== EXTRACT ORIGINAL COLORS FROM TEXTURES/MATERIALS =====
+function extractOriginalColors(root){
+  // Sample the base color from each mesh's material/texture and bake into a flat color array
+  // Returns a Map of mesh.uuid → Float32Array of RGB per vertex
+  const colorMap=new Map();
+  root.traverse(c=>{
+    if(!c.isMesh||!c.geometry)return;
+    const geo=c.geometry, pos=geo.attributes.position, uv=geo.attributes.uv;
+    const cnt=pos.count;
+    const cols=new Float32Array(cnt*3);
+    const mat=c.material;
+    
+    // Try to get base color from material
+    let baseColor=new THREE.Color(1,1,1);
+    let hasTexture=false, texCanvas=null, texCtx=null, texW=0, texH=0;
+    
+    if(mat){
+      if(mat.color) baseColor=mat.color.clone();
+      // Try to read texture pixels
+      const map=mat.map||mat.baseColorMap||mat.diffuseMap;
+      if(map&&map.image){
+        hasTexture=true;
+        const img=map.image;
+        texCanvas=document.createElement('canvas');
+        texW=Math.min(img.width||256,512);texH=Math.min(img.height||256,512);
+        texCanvas.width=texW;texCanvas.height=texH;
+        texCtx=texCanvas.getContext('2d');
+        texCtx.drawImage(img,0,0,texW,texH);
+      }
+    }
+    
+    for(let i=0;i<cnt;i++){
+      let r=baseColor.r,g=baseColor.g,b=baseColor.b;
+      if(hasTexture&&texCtx&&uv){
+        const u=uv.getX(i),v=uv.getY(i);
+        const px=Math.floor(((u%1+1)%1)*texW);
+        const py=Math.floor(((1-((v%1+1)%1)))*texH);
+        try{
+          const pixel=texCtx.getImageData(Math.min(px,texW-1),Math.min(py,texH-1),1,1).data;
+          r=pixel[0]/255;g=pixel[1]/255;b=pixel[2]/255;
+        }catch(e){}
+      }
+      // Vertex colors if present
+      if(geo.attributes.color){
+        r=geo.attributes.color.getX(i);
+        g=geo.attributes.color.getY(i);
+        b=geo.attributes.color.getZ(i);
+      }
+      cols[i*3]=r;cols[i*3+1]=g;cols[i*3+2]=b;
+    }
+    colorMap.set(c.uuid,cols);
+  });
+  return colorMap;
+}
+
+// Bake original texture colors into sampled particle positions
+function sampleOrigColors(root,positions,count){
+  root.updateMatrixWorld(true);
+  const cols=new Float32Array(count*3);
+  // Build a simple spatial lookup: for each particle, find nearest mesh vertex and use its color
+  const colorMap=extractOriginalColors(root);
+  // Collect all world-space verts with their color
+  const allVerts=[],allCols=[];
+  root.traverse(c=>{
+    if(!c.isMesh||!c.geometry)return;
+    const cCols=colorMap.get(c.uuid);if(!cCols)return;
+    const geo=c.geometry,pos=geo.attributes.position;
+    const v=new THREE.Vector3();
+    for(let i=0;i<pos.count;i++){
+      v.fromBufferAttribute(pos,i);
+      if(c.isSkinnedMesh){c.boneTransform(i,v);v.applyMatrix4(c.matrixWorld)}
+      else v.applyMatrix4(c.matrixWorld);
+      allVerts.push(v.x,v.y,v.z);
+      allCols.push(cCols[i*3],cCols[i*3+1],cCols[i*3+2]);
+    }
+  });
+  if(!allVerts.length){cols.fill(1);return cols}
+  // For each particle, find closest vertex (subsample for speed)
+  const nv=allVerts.length/3;const step=Math.max(1,Math.floor(nv/8000));
+  for(let i=0;i<count;i++){
+    const px=positions[i*3],py=positions[i*3+1],pz=positions[i*3+2];
+    let bestD=1e9,bestJ=0;
+    for(let j=0;j<nv;j+=step){
+      const dx=allVerts[j*3]-px,dy=allVerts[j*3+1]-py,dz=allVerts[j*3+2]-pz;
+      const d=dx*dx+dy*dy+dz*dz;
+      if(d<bestD){bestD=d;bestJ=j}
+    }
+    cols[i*3]=allCols[bestJ*3];cols[i*3+1]=allCols[bestJ*3+1];cols[i*3+2]=allCols[bestJ*3+2];
+  }
+  return cols;
+}
+
+// Store references when loading
+function storeOriginals(root){
+  origMaterials=[];
+  root.traverse(c=>{if(c.isMesh&&c.material)origMaterials.push({mesh:c,material:c.material.clone?c.material.clone():c.material})});
+}
+
+// Bake texture colors directly into extracted geometry's vertex colors
+function bakeTexToGeo(root,geo){
+  const colorMap=extractOriginalColors(root);
+  const pos=geo.attributes.position;
+  // Build all world-space verts + colors from original
+  const av=[],ac=[];
+  root.traverse(c=>{if(!c.isMesh||!c.geometry)return;const cc=colorMap.get(c.uuid);if(!cc)return;
+    const p=c.geometry.attributes.position,v=new THREE.Vector3();
+    for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);
+      if(c.isSkinnedMesh){c.boneTransform(i,v);v.applyMatrix4(c.matrixWorld)}else v.applyMatrix4(c.matrixWorld);
+      av.push(v.x,v.y,v.z);ac.push(cc[i*3],cc[i*3+1],cc[i*3+2])}});
+  if(!av.length)return;
+  const nv=av.length/3,step=Math.max(1,Math.floor(nv/6000));
+  const cols=new Float32Array(pos.count*3);
+  for(let i=0;i<pos.count;i++){
+    const px=pos.getX(i),py=pos.getY(i),pz=pos.getZ(i);
+    let best=1e9,bj=0;
+    for(let j=0;j<nv;j+=step){const dx=av[j*3]-px,dy=av[j*3+1]-py,dz=av[j*3+2]-pz,d=dx*dx+dy*dy+dz*dz;if(d<best){best=d;bj=j}}
+    cols[i*3]=ac[bj*3];cols[i*3+1]=ac[bj*3+1];cols[i*3+2]=ac[bj*3+2];
+  }
+  geo.setAttribute('texColor',new THREE.Float32BufferAttribute(cols,3));
+}
+
+// ===== COMMON UNIFORMS =====
+function commonUni(fx,amt,mny,mxy){return{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt},uBass:{value:0},uMid:{value:0},uHigh:{value:0},uColA:{value:new THREE.Color($('ca').value)},uColB:{value:new THREE.Color($('cb').value)},uColorMode:{value:parseFloat($('colormode').selectedIndex)},uMinY:{value:mny},uMaxY:{value:mxy},uUseTex:{value:useTexColors?1.:0.}}}
 
 // ===== SHADER BUILDERS =====
-function mkPtsMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt},uS:{value:2.5},uP:{value:ren.getPixelRatio()}},vertexShader:NOISE_GLSL+FX_FUNC+`attribute float aR;attribute vec3 color;varying vec3 vC;varying float vA;uniform float uS,uP;void main(){vC=color;vec3 p=position;p=fxDisplace(p,aR);float t=uTime*.2+aR*6.283;p+=vec3(cos(t*.7),sin(t),sin(t*1.3))*.001;vA=.65+.35*(.5+.5*sin(uTime*.7+aR*8.));vec4 mv=modelViewMatrix*vec4(p,1.);gl_PointSize=uS*uP*(1./-mv.z);gl_Position=projectionMatrix*mv;}`,fragmentShader:`varying vec3 vC;varying float vA;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;float g=exp(-d*3.5);gl_FragColor=vec4(vC*g*1.2,vA*g);}`,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending})}
-function mkWireMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt}},vertexShader:NOISE_GLSL+FX_FUNC+`attribute vec3 color;attribute float aR;varying vec3 vC;void main(){vC=color;vec3 p=position;p=fxDisplace(p,aR);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,fragmentShader:`varying vec3 vC;void main(){gl_FragColor=vec4(vC*.85,.55);}`,wireframe:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})}
-function mkSolidMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt},uLD:{value:new THREE.Vector3(.5,.8,.6).normalize()}},vertexShader:NOISE_GLSL+FX_FUNC+`attribute vec3 color;attribute float aR;varying vec3 vC;varying vec3 vN;varying vec3 vP;void main(){vC=color;vec3 p=position;p=fxDisplace(p,aR);vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,fragmentShader:`varying vec3 vC,vN,vP;uniform vec3 uLD;void main(){vec3 n=normalize(vN);float diff=max(dot(n,uLD),0.)*.9;vec3 vd=normalize(-vP);float spec=pow(max(dot(n,normalize(uLD+vd)),0.),40.)*.3;float rim=pow(1.-max(dot(n,vd),0.),3.)*.25;gl_FragColor=vec4(vC*(diff+.12)+spec+rim*vC,.92);}`,transparent:true,side:THREE.DoubleSide})}
-function mkWireOverMat(fx,amt){return new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uFx:{value:fx},uAmt:{value:amt}},vertexShader:NOISE_GLSL+FX_FUNC+`attribute float aR;void main(){vec3 p=position;p=fxDisplace(p,aR);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,fragmentShader:`void main(){gl_FragColor=vec4(1.,1.,1.,.03);}`,wireframe:true,transparent:true,depthWrite:false})}
+const colorGLSL=getColorGLSL();
+function mkPtsMat(fx,amt,mny,mxy){const u={...commonUni(fx,amt,mny,mxy),uS:{value:2.5},uP:{value:ren.getPixelRatio()}};
+  return new THREE.ShaderMaterial({uniforms:u,vertexShader:NOISE_GLSL+FX_FUNC+colorGLSL+`
+    attribute float aR;attribute vec3 texColor;varying vec3 vC;varying float vA;uniform float uS,uP,uUseTex;
+    void main(){vec3 p=position;p=fxDisplace(p,aR);float t=uTime*.2+aR*6.283;p+=vec3(cos(t*.7),sin(t),sin(t*1.3))*.001;
+    vec3 vd=normalize(cameraPosition-p);vec3 baseC=getColor(position,vec3(0.,1.,0.),aR,vd);
+    vC=uUseTex>.5&&texColor.r+texColor.g+texColor.b>0.01?texColor:baseC;
+    vA=.65+.35*(.5+.5*sin(uTime*.7+aR*8.));vec4 mv=modelViewMatrix*vec4(p,1.);gl_PointSize=uS*uP*(1./-mv.z);gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vC;varying float vA;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;float g=exp(-d*3.5);gl_FragColor=vec4(vC*g*1.2,vA*g);}`,
+  transparent:true,depthWrite:false,blending:THREE.AdditiveBlending})}
+
+function mkWireMat(fx,amt,mny,mxy){const u=commonUni(fx,amt,mny,mxy);
+  return new THREE.ShaderMaterial({uniforms:u,vertexShader:NOISE_GLSL+FX_FUNC+colorGLSL+`
+    attribute float aR;attribute vec3 texColor;varying vec3 vC;uniform float uUseTex;
+    void main(){vec3 p=position;p=fxDisplace(p,aR);vec3 vd=normalize(cameraPosition-p);vec3 baseC=getColor(position,normal,aR,vd);
+    vC=uUseTex>.5&&length(texColor)>.01?texColor:baseC;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+  fragmentShader:`varying vec3 vC;void main(){gl_FragColor=vec4(vC*.85,.55);}`,wireframe:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})}
+
+function mkSolidMat(fx,amt,mny,mxy){const u={...commonUni(fx,amt,mny,mxy),uLD:{value:new THREE.Vector3(.5,.8,.6).normalize()}};
+  return new THREE.ShaderMaterial({uniforms:u,vertexShader:NOISE_GLSL+FX_FUNC+colorGLSL+`
+    attribute float aR;attribute vec3 texColor;varying vec3 vC;varying vec3 vN;varying vec3 vP;uniform float uUseTex;
+    void main(){vec3 p=position;p=fxDisplace(p,aR);vec3 vd=normalize(cameraPosition-p);vec3 baseC=getColor(position,normal,aR,vd);
+    vC=uUseTex>.5&&length(texColor)>.01?texColor:baseC;vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+  fragmentShader:`varying vec3 vC,vN,vP;uniform vec3 uLD;void main(){vec3 n=normalize(vN);float diff=max(dot(n,uLD),0.)*.9;vec3 vd=normalize(-vP);float spec=pow(max(dot(n,normalize(uLD+vd)),0.),40.)*.3;float rim=pow(1.-max(dot(n,vd),0.),3.)*.25;gl_FragColor=vec4(vC*(diff+.12)+spec+rim*vC,.92);}`,
+  transparent:true,side:THREE.DoubleSide})}
+
+function mkXrayMat(fx,amt,mny,mxy){const u=commonUni(fx,amt,mny,mxy);
+  return new THREE.ShaderMaterial({uniforms:u,vertexShader:NOISE_GLSL+FX_FUNC+colorGLSL+`
+    attribute float aR;attribute vec3 texColor;varying vec3 vC;varying vec3 vN;varying vec3 vP;uniform float uUseTex;
+    void main(){vec3 p=position;p=fxDisplace(p,aR);vec3 vd=normalize(cameraPosition-p);vec3 baseC=getColor(position,normal,aR,vd);
+    vC=uUseTex>.5&&length(texColor)>.01?texColor:baseC;vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+  fragmentShader:`varying vec3 vC,vN,vP;void main(){vec3 n=normalize(vN);vec3 vd=normalize(-vP);float edge=pow(1.-abs(dot(n,vd)),1.8);gl_FragColor=vec4(vC*edge,(edge*.6+.05));}`,
+  transparent:true,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending})}
+
+function mkSimpleFxMat(fx,amt,mny,mxy){const u=commonUni(fx,amt,mny,mxy);
+  return new THREE.ShaderMaterial({uniforms:u,vertexShader:NOISE_GLSL+FX_FUNC+`attribute float aR;void main(){vec3 p=position;p=fxDisplace(p,aR);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+  fragmentShader:`void main(){gl_FragColor=vec4(1.,1.,1.,.03);}`,wireframe:true,transparent:true,depthWrite:false})}
 
 // ===== POST-PROCESS =====
 let postScene,postCam,postMat,renderTarget;
-function initPost(){renderTarget=new THREE.WebGLRenderTarget(innerWidth,innerHeight);postScene=new THREE.Scene();postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);postMat=new THREE.ShaderMaterial({uniforms:{tDiffuse:{value:renderTarget.texture},uTime:{value:0},uGlitch:{value:0}},vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,1.);}`,fragmentShader:`uniform sampler2D tDiffuse;uniform float uTime,uGlitch;varying vec2 vUv;float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}void main(){vec2 uv=vUv;vec4 col=texture2D(tDiffuse,uv);if(uGlitch>.01){col.rgb+=sin(uv.y*900.+uTime*3.)*.015*uGlitch;float sp=uGlitch*.012;float bt=step(.88,rand(vec2(floor(uv.y*18.),floor(uTime*7.))));sp+=bt*uGlitch*.035;col.r=texture2D(tDiffuse,uv+vec2(sp,0.)).r;col.b=texture2D(tDiffuse,uv-vec2(sp,0.)).b;float tear=step(.94,rand(vec2(floor(uv.y*25.),floor(uTime*11.))));col=mix(col,texture2D(tDiffuse,vec2(uv.x+tear*.08*uGlitch*sin(uTime*60.),uv.y)),.5+.5*tear);col.rgb+=rand(uv+uTime)*.05*uGlitch;}float vig=1.-dot((vUv-.5)*1.2,(vUv-.5)*1.2);col.rgb*=mix(.72,1.,vig);gl_FragColor=col;}`});postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),postMat))}
+function initPost(){renderTarget=new THREE.WebGLRenderTarget(innerWidth,innerHeight);postScene=new THREE.Scene();postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  postMat=new THREE.ShaderMaterial({uniforms:{tDiffuse:{value:renderTarget.texture},uTime:{value:0},uGlitch:{value:0},uBass:{value:0}},
+  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,1.);}`,
+  fragmentShader:`uniform sampler2D tDiffuse;uniform float uTime,uGlitch,uBass;varying vec2 vUv;
+    float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
+    void main(){vec2 uv=vUv;vec4 col=texture2D(tDiffuse,uv);
+    float g=uGlitch+pow(max(0.,uBass-.2)/.8,2.)*.3;
+    if(g>.01){col.rgb+=sin(uv.y*900.+uTime*3.)*.015*g;float sp=g*.012;float bt=step(.88,rand(vec2(floor(uv.y*18.),floor(uTime*7.))));sp+=bt*g*.035;
+    col.r=texture2D(tDiffuse,uv+vec2(sp,0.)).r;col.b=texture2D(tDiffuse,uv-vec2(sp,0.)).b;
+    float tear=step(.94,rand(vec2(floor(uv.y*25.),floor(uTime*11.))));col=mix(col,texture2D(tDiffuse,vec2(uv.x+tear*.08*g*sin(uTime*60.),uv.y)),.5+.5*tear);
+    col.rgb+=rand(uv+uTime)*.05*g;}
+    float vig=1.-dot((vUv-.5)*1.2,(vUv-.5)*1.2);col.rgb*=mix(.72,1.,vig);gl_FragColor=col;}`});
+  postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),postMat))}
 
 // ===== MAIN STATE =====
-let scene,cam,ren,clk;
-let grp=null,ambL,dirL,dirL2;
+let scene,cam,ren,clk;let grp=null,ambL,dirL,dirL2;
 let isRec=false,frames=[],fCnt=0;
 let drag=false,dX=0,dY=0,cT=0,cP=Math.PI/3.2,cR=4.5,tT=0,tP=Math.PI/3.2,tD=0;
-let lastPos=null,lastModel=null;
-const PC=200000;
+let lastPos=null,liveScene=null;const PC=200000;
+let mixer=null,animActions=[],activeAction=null,animPlaying=false,hasAnim=false,resampleInterval=null;
+let pivot=null; // rotation wrapper for the model
+let origMaterials=[]; // stored {mesh, material} pairs for ORIGINAL mode
+let useTexColors=false; // TEX toggle state
 
-// Animation state
-let mixer=null,animActions=[],activeAction=null,animPlaying=false;
-let liveScene=null; // The scene with SkinnedMesh for live animation
-let hasAnim=false;
-let resampleInterval=null;
+// ===== AUTO FX (global) =====
+let autoFxOn=false, autoFxLastSwitch=0;
+const autoFxCooldown=2.0;
+const fxOptions=['0','1','2','3','4','5','6','7'];
+const modeOptionsArr=['particles','mesh','solid','pointlines','xray'];
+function autoFxUpdate(t){
+  if(!autoFxOn||!analyser)return;
+  if(audioBass>.55&&(t-autoFxLastSwitch)>autoFxCooldown){
+    autoFxLastSwitch=t;
+    const curFx=$('fx').value;
+    let newFx;do{newFx=fxOptions[Math.floor(Math.random()*fxOptions.length)]}while(newFx===curFx&&fxOptions.length>1);
+    $('fx').value=newFx;
+    if(Math.random()<.2){$('mode').value=modeOptionsArr[Math.floor(Math.random()*modeOptionsArr.length)]}
+    if(Math.random()<.3){$('colormode').selectedIndex=Math.floor(Math.random()*$('colormode').options.length)}
+    applyMode();
+  }
+  if(audioMid>.4){$('fxa').value=Math.floor(30+audioMid*70)}
+}
 
 function init(){
   scene=new THREE.Scene();scene.background=new THREE.Color(0);
   cam=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.01,500);
   ren=new THREE.WebGLRenderer({canvas:$('cv'),antialias:true,preserveDrawingBuffer:true});
   ren.setSize(innerWidth,innerHeight);ren.setPixelRatio(Math.min(devicePixelRatio,2));
-  ren.toneMapping=THREE.ACESFilmicToneMapping;ren.toneMappingExposure=1.2;
-  clk=new THREE.Clock();initPost();
+  ren.toneMapping=THREE.ACESFilmicToneMapping;ren.toneMappingExposure=1.2;clk=new THREE.Clock();initPost();
   ambL=new THREE.AmbientLight(0x222233,.3);scene.add(ambL);
   dirL=new THREE.DirectionalLight(0xffffff,.8);dirL.position.set(3,5,4);scene.add(dirL);
   dirL2=new THREE.DirectionalLight(0x4488ff,.3);dirL2.position.set(-3,-2,-4);scene.add(dirL2);
   const dg=new THREE.BufferGeometry(),dn=1200,dp=new Float32Array(dn*3);for(let i=0;i<dn;i++){dp[i*3]=(Math.random()-.5)*20;dp[i*3+1]=(Math.random()-.5)*20;dp[i*3+2]=(Math.random()-.5)*20}dg.setAttribute('position',new THREE.BufferAttribute(dp,3));scene.add(new THREE.Points(dg,new THREE.PointsMaterial({color:0x162636,size:.015,transparent:true,opacity:.1,blending:THREE.AdditiveBlending,depthWrite:false})));
-
   addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();ren.setSize(innerWidth,innerHeight);renderTarget.setSize(innerWidth,innerHeight)});
   const cv=ren.domElement;
-  cv.addEventListener('mousedown',e=>{drag=true;dX=e.clientX;dY=e.clientY});
-  cv.addEventListener('mousemove',e=>{if(!drag)return;tT-=(e.clientX-dX)*.005;tP=cl(tP+(e.clientY-dY)*.005,.1,Math.PI-.1);dX=e.clientX;dY=e.clientY});
-  cv.addEventListener('mouseup',()=>drag=false);cv.addEventListener('mouseleave',()=>drag=false);
+  cv.addEventListener('mousedown',e=>{drag=true;dX=e.clientX;dY=e.clientY});cv.addEventListener('mousemove',e=>{if(!drag)return;tT-=(e.clientX-dX)*.005;tP=cl(tP+(e.clientY-dY)*.005,.1,Math.PI-.1);dX=e.clientX;dY=e.clientY});cv.addEventListener('mouseup',()=>drag=false);cv.addEventListener('mouseleave',()=>drag=false);
   cv.addEventListener('wheel',e=>{cR=cl(cR+e.deltaY*.004,.5,20)},{passive:true});
   cv.addEventListener('touchstart',e=>{if(e.touches.length===1){drag=true;dX=e.touches[0].clientX;dY=e.touches[0].clientY}else if(e.touches.length===2){drag=false;const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;tD=Math.sqrt(dx*dx+dy*dy)}e.preventDefault()},{passive:false});
   cv.addEventListener('touchmove',e=>{if(e.touches.length===1&&drag){tT-=(e.touches[0].clientX-dX)*.007;tP=cl(tP+(e.touches[0].clientY-dY)*.007,.1,Math.PI-.1);dX=e.touches[0].clientX;dY=e.touches[0].clientY}else if(e.touches.length===2){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;const d=Math.sqrt(dx*dx+dy*dy);cR=cl(cR-(d-tD)*.008,.5,20);tD=d}e.preventDefault()},{passive:false});
   cv.addEventListener('touchend',()=>drag=false);
-  document.addEventListener('dragover',e=>{e.preventDefault();$('dz').classList.add('s')});
-  document.addEventListener('dragleave',e=>{if(!e.relatedTarget)$('dz').classList.remove('s')});
-  document.addEventListener('drop',async e=>{e.preventDefault();$('dz').classList.remove('s');const f=e.dataTransfer.files[0];if(f&&(f.name.endsWith('.glb')||f.name.endsWith('.gltf')))await processFile(f)});
-  $('mode').addEventListener('change',()=>applyMode());
-  $('fx').addEventListener('change',()=>applyMode());
-  $('ca').addEventListener('input',()=>applyMode());
-  $('cb').addEventListener('input',()=>applyMode());
+  document.addEventListener('dragover',e=>{e.preventDefault();$('dz').classList.add('s')});document.addEventListener('dragleave',e=>{if(!e.relatedTarget)$('dz').classList.remove('s')});
+  document.addEventListener('drop',async e=>{e.preventDefault();$('dz').classList.remove('s');for(const f of e.dataTransfer.files){if(f.name.match(/\.(glb|gltf)$/i))await processFile(f);else if(f.type.startsWith('audio/'))setupAudio(f)}});
+  for(const id of['mode','fx','ca','cb','colormode'])$(id).addEventListener('change',()=>applyMode());
+  for(const id of['ca','cb'])$(id).addEventListener('input',()=>applyMode());
+  // TEX toggle
+  $('tex-toggle').addEventListener('click',()=>{useTexColors=!useTexColors;$('tex-toggle').classList.toggle('active',useTexColors);applyMode()});
   $('li').addEventListener('input',e=>{const v=e.target.value/100;dirL.intensity=v*1.5;ambL.intensity=v*.5});
+  // Model rotation controls
+  function updatePivotRotation(){
+    if(!pivot)return;
+    const deg=Math.PI/180;
+    pivot.rotation.set(parseFloat($('rx').value)*deg, parseFloat($('ry').value)*deg, parseFloat($('rz').value)*deg);
+    pivot.updateMatrixWorld(true);
+    // Re-sample if particles mode (need updated world positions)
+    if(liveScene&&$('mode').value==='particles'){lastPos=sampleSurface(liveScene,PC);applyMode()}
+    else if(liveScene)applyMode();
+  }
+  $('rx').addEventListener('input',updatePivotRotation);
+  $('ry').addEventListener('input',updatePivotRotation);
+  $('rz').addEventListener('input',updatePivotRotation);
+  $('rot-reset').addEventListener('click',()=>{$('rx').value=0;$('ry').value=0;$('rz').value=0;updatePivotRotation()});
   $('rb').addEventListener('click',toggleRec);
   $('file-new').addEventListener('change',async e=>{const f=e.target.files[0];if(f)await processFile(f)});
   $('file-main').addEventListener('change',async e=>{const f=e.target.files[0];if(f)await processFile(f)});
-  $('drop-area').addEventListener('dragover',e=>{e.preventDefault();e.currentTarget.classList.add('over')});
-  $('drop-area').addEventListener('dragleave',e=>e.currentTarget.classList.remove('over'));
-  $('drop-area').addEventListener('drop',async e=>{e.preventDefault();e.currentTarget.classList.remove('over');const f=e.dataTransfer.files[0];if(f)await processFile(f)});
+  $('file-audio').addEventListener('change',e=>{const f=e.target.files[0];if(f)setupAudio(f)});
+  $('drop-area').addEventListener('dragover',e=>{e.preventDefault();e.currentTarget.classList.add('over')});$('drop-area').addEventListener('dragleave',e=>e.currentTarget.classList.remove('over'));
+  $('drop-area').addEventListener('drop',async e=>{e.preventDefault();e.currentTarget.classList.remove('over');for(const f of e.dataTransfer.files){if(f.name.match(/\.(glb|gltf)$/i))await processFile(f);else if(f.type.startsWith('audio/'))setupAudio(f)}});
+  $('anim-toggle').addEventListener('click',()=>{if(!mixer||!activeAction)return;animPlaying=!animPlaying;if(animPlaying){activeAction.paused=false;activeAction.play();$('anim-toggle').textContent='❚❚';$('anim-toggle').classList.add('active')}else{activeAction.paused=true;$('anim-toggle').textContent='▶';$('anim-toggle').classList.remove('active')}});
+  $('anim-sel').addEventListener('change',e=>{const idx=parseInt(e.target.value);if(activeAction)activeAction.stop();activeAction=animActions[idx];if(activeAction){activeAction.reset().play();if(!animPlaying)activeAction.paused=true}});
   
-  // Animation controls
-  $('anim-toggle').addEventListener('click',()=>{
-    if(!mixer||!activeAction)return;
-    animPlaying=!animPlaying;
-    if(animPlaying){activeAction.paused=false;activeAction.play();$('anim-toggle').textContent='❚❚';$('anim-toggle').classList.add('active')}
-    else{activeAction.paused=true;$('anim-toggle').textContent='▶';$('anim-toggle').classList.remove('active')}
+  // ===== AUDIO PLAY/PAUSE =====
+  $('audio-play').addEventListener('click',()=>{
+    if(!audioElement)return;
+    if(audioElement.paused){audioElement.play();$('audio-play').textContent='❚❚♪';$('audio-play').classList.add('active')}
+    else{audioElement.pause();$('audio-play').textContent='▶♪';$('audio-play').classList.remove('active')}
   });
-  $('anim-sel').addEventListener('change',e=>{
-    const idx=parseInt(e.target.value);
-    if(activeAction)activeAction.stop();
-    activeAction=animActions[idx];
-    if(activeAction){activeAction.reset().play();if(!animPlaying)activeAction.paused=true;}
+  
+  // ===== AUTO FX CYCLE (switches FX on strong beats) =====
+  $('auto-fx').addEventListener('click',()=>{
+    autoFxOn=!autoFxOn;
+    $('auto-fx').classList.toggle('active',autoFxOn);
+    $('auto-fx').textContent=autoFxOn?'AUTO ●':'AUTO';
+  });
+  
+  // ===== RANDOM ALL SETTINGS =====
+  $('random-btn').addEventListener('click',()=>{
+    $('mode').value=modeOptionsArr[Math.floor(Math.random()*modeOptionsArr.length)];
+    $('fx').value=fxOptions[Math.floor(Math.random()*fxOptions.length)];
+    // Random AMT
+    $('fxa').value=Math.floor(Math.random()*80+10);
+    // Random colors
+    const rHex=()=>'#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0');
+    $('ca').value=rHex();$('cb').value=rHex();
+    // Random color mode
+    $('colormode').selectedIndex=Math.floor(Math.random()*$('colormode').options.length);
+    // Random light
+    $('li').value=Math.floor(Math.random()*80+20);
+    dirL.intensity=($('li').value/100)*1.5;ambL.intensity=($('li').value/100)*.5;
+    // Random camera
+    const camOpts=['orbit','drift','dramatic','top','static'];
+    $('cam').value=camOpts[Math.floor(Math.random()*camOpts.length)];
+    applyMode();
   });
 }
 
 async function processFile(f){
   $('upload').classList.add('gone');showOv();sL(10,'READING...');await tick();
-  try{
-    const gltf=await loadFile(f);
-    const scn=gltf.scene;
-    const anims=gltf.animations||[];
-    
-    sL(30,'NORMALIZING...');await tick();
-    normalizeScene(scn,3.5);
-    
-    // Store the live scene (with skinning intact) for animation
+  try{const gltf=await loadFile(f);const scn=gltf.scene;const anims=gltf.animations||[];
+    sL(30,'NORMALIZING...');await tick();normalizeScene(scn,3.5);
+    // Remove old pivot
+    if(pivot){scene.remove(pivot)}
+    // Create rotation pivot wrapper
+    pivot=new THREE.Group();
+    pivot.add(scn);
+    scene.add(pivot);
     liveScene=scn;
-    // Also keep a reference for static sampling
-    lastModel=scn;
-    
-    // Setup animation
+    storeOriginals(scn);
     if(resampleInterval){clearInterval(resampleInterval);resampleInterval=null}
     mixer=null;animActions=[];activeAction=null;animPlaying=false;hasAnim=anims.length>0;
-    
-    if(hasAnim){
-      mixer=new THREE.AnimationMixer(scn);
-      const sel=$('anim-sel');sel.innerHTML='';
-      anims.forEach((clip,i)=>{
-        const action=mixer.clipAction(clip);
-        action.setLoop(THREE.LoopRepeat);
-        animActions.push(action);
-        const opt=document.createElement('option');opt.value=i;opt.textContent=clip.name||`Clip ${i}`;sel.appendChild(opt);
-      });
-      activeAction=animActions[0];
-      activeAction.reset().play();animPlaying=true;
-      $('anim-toggle').textContent='❚❚';$('anim-toggle').classList.add('active');
-      $('anim-ui').classList.add('show');
-    }else{
-      $('anim-ui').classList.remove('show');
-    }
-    
-    sL(55,'SAMPLING...');await tick();
-    lastPos=sampleSurface(scn,PC);
-    sL(88,'RENDERING...');await tick();
-    applyMode();
-    
-    // For animated models, re-sample particles periodically
-    if(hasAnim){
-      resampleInterval=setInterval(()=>{
-        if(!animPlaying||$('mode').value!=='particles')return;
-        liveScene.updateMatrixWorld(true);
-        lastPos=sampleSurface(liveScene,PC);
-        applyMode();
-      },200); // Resample every 200ms for smooth animation
-    }
-    
-    sL(100,'');await tick();hideOv();
-    $('top').classList.add('vis');$('bb').classList.add('vis');
-    $('info').textContent=f.name.replace(/\.\w+$/,'')+(hasAnim?' — ANIMATED':'');
-  }catch(e){console.error(e);sL(0,'ERROR: '+e.message);setTimeout(()=>{hideOv();$('upload').classList.remove('gone')},2000)}
-}
+    if(hasAnim){mixer=new THREE.AnimationMixer(scn);const sel=$('anim-sel');sel.innerHTML='';anims.forEach((c,i)=>{const a=mixer.clipAction(c);a.setLoop(THREE.LoopRepeat);animActions.push(a);const o=document.createElement('option');o.value=i;o.textContent=c.name||`Clip ${i}`;sel.appendChild(o)});activeAction=animActions[0];activeAction.reset().play();animPlaying=true;$('anim-toggle').textContent='❚❚';$('anim-toggle').classList.add('active');$('anim-ui').classList.add('show')}
+    else $('anim-ui').classList.remove('show');
+    sL(55,'SAMPLING...');await tick();lastPos=sampleSurface(scn,PC);sL(88,'RENDERING...');await tick();applyMode();
+    if(hasAnim)resampleInterval=setInterval(()=>{if(!animPlaying||$('mode').value!=='particles')return;liveScene.updateMatrixWorld(true);lastPos=sampleSurface(liveScene,PC);applyMode()},200);
+    sL(100,'');await tick();hideOv();$('top').classList.add('vis');$('bb').classList.add('vis');$('info').textContent=f.name.replace(/\.\w+$/,'')+(hasAnim?' — ANIMATED':'');
+  }catch(e){console.error(e);sL(0,'ERROR');setTimeout(()=>{hideOv();$('upload').classList.remove('gone')},2000)}}
 
 function applyMode(){
   if(grp){scene.remove(grp);grp.traverse(c=>{if(c.geometry)c.geometry.dispose();if(c.material)c.material.dispose()});grp=null}
+  if(!liveScene&&!lastPos)return;
   const mode=$('mode').value,fxV=parseFloat($('fx').value),amtV=$('fxa').value/100;
-  const cA=new THREE.Color($('ca').value),cB=new THREE.Color($('cb').value);
   grp=new THREE.Group();
+  
+  // ORIGINAL mode: show the GLB with its own materials/textures
+  if(mode==='original'){
+    // Hide liveScene's custom shader visuals, show original meshes directly
+    liveScene.visible=true;
+    liveScene.traverse(c=>{if(c.isMesh){
+      // Restore original material
+      const orig=origMaterials.find(o=>o.mesh===c);
+      if(orig)c.material=orig.material;
+      c.visible=true;
+    }});
+    scene.add(grp); // empty grp, the liveScene in pivot is already visible
+    return;
+  }
+  
+  // For all other modes, hide the original model visuals
+  liveScene.traverse(c=>{if(c.isMesh)c.visible=false});
+  liveScene.updateMatrixWorld(true);
   
   if(mode==='particles'&&lastPos){
     const pos=lastPos,cnt=pos.length/3,geo=new THREE.BufferGeometry();
     geo.setAttribute('position',new THREE.BufferAttribute(pos.slice(),3));
-    let mny=1e9,mxy=-1e9;for(let i=0;i<cnt;i++){const y=pos[i*3+1];if(y<mny)mny=y;if(y>mxy)mxy=y}const ry=mxy-mny||1;
-    const rands=new Float32Array(cnt),cols=new Float32Array(cnt*3);
-    for(let i=0;i<cnt;i++){rands[i]=Math.random();const t=(pos[i*3+1]-mny)/ry;const c=cA.clone().lerp(cB,t);c.offsetHSL((Math.random()-.5)*.03,0,(Math.random()-.5)*.04);cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b}
-    geo.setAttribute('aR',new THREE.BufferAttribute(rands,1));geo.setAttribute('color',new THREE.BufferAttribute(cols,3));
-    grp.add(new THREE.Points(geo,mkPtsMat(fxV,amtV)));
-  }else if((mode==='mesh'||mode==='solid')&&lastModel){
-    // For animated: extract current pose geometry
-    liveScene.updateMatrixWorld(true);
-    const geo=extractGeo(liveScene);addGradient(geo,cA,cB);
-    if(mode==='mesh'){grp.add(new THREE.Mesh(geo,mkWireMat(fxV,amtV)))}
-    else{grp.add(new THREE.Mesh(geo,mkSolidMat(fxV,amtV)));
-      const wg=geo.clone();wg.setAttribute('aR',geo.attributes.aR.clone());grp.add(new THREE.Mesh(wg,mkWireOverMat(fxV,amtV)))}
+    const{mny,mxy}=getBounds({getY:i=>pos[i*3+1],count:cnt});
+    addAttribs(geo);
+    // If TEX is on, bake original texture colors into vertex colors
+    if(useTexColors){
+      const texCols=sampleOrigColors(liveScene,pos,cnt);
+      geo.setAttribute('texColor',new THREE.BufferAttribute(texCols,3));
+    }
+    grp.add(new THREE.Points(geo,mkPtsMat(fxV,amtV,mny,mxy)));
+  }
+  else if(mode==='mesh'){
+    const geo=extractGeo(liveScene);addAttribs(geo);const{mny,mxy}=getBounds(geo.attributes.position);
+    if(useTexColors)bakeTexToGeo(liveScene,geo);
+    grp.add(new THREE.Mesh(geo,mkWireMat(fxV,amtV,mny,mxy)));
+  }
+  else if(mode==='solid'){
+    const geo=extractGeo(liveScene);addAttribs(geo);const{mny,mxy}=getBounds(geo.attributes.position);
+    if(useTexColors)bakeTexToGeo(liveScene,geo);
+    grp.add(new THREE.Mesh(geo,mkSolidMat(fxV,amtV,mny,mxy)));
+    const wg=geo.clone();wg.setAttribute('aR',geo.attributes.aR.clone());
+    if(geo.attributes.texColor)wg.setAttribute('texColor',geo.attributes.texColor.clone());
+    grp.add(new THREE.Mesh(wg,mkSimpleFxMat(fxV,amtV,mny,mxy)));
+  }
+  else if(mode==='pointlines'&&lastPos){
+    // Particles + connecting lines between nearby points
+    const pos=lastPos,cnt=pos.length/3,geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.BufferAttribute(pos.slice(),3));
+    const{mny,mxy}=getBounds({getY:i=>pos[i*3+1],count:cnt});
+    addAttribs(geo);grp.add(new THREE.Points(geo,mkPtsMat(fxV,amtV,mny,mxy)));
+    // Build line connections
+    const cs=.07,h={},sn=Math.min(cnt,25000),step=Math.max(1,Math.floor(cnt/sn));
+    const idxs=[];for(let j=0;j<cnt;j+=step)idxs.push(j);
+    for(const i of idxs){const x=pos[i*3],y=pos[i*3+1],z=pos[i*3+2];const k=`${Math.floor(x/cs)},${Math.floor(y/cs)},${Math.floor(z/cs)}`;if(!h[k])h[k]=[];h[k].push(i)}
+    const lp=[];let lCnt=0;const md=cs*1.3,md2=md*md,ML=200000;
+    for(const k in h){if(lCnt>=ML)break;const cell=h[k];const[cx,cy,cz]=k.split(',').map(Number);
+      for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)for(let dz=-1;dz<=1;dz++){const nk=`${cx+dx},${cy+dy},${cz+dz}`;const nc=h[nk];if(!nc)continue;
+        for(const ai of cell){if(lCnt>=ML)break;const ax=pos[ai*3],ay=pos[ai*3+1],az=pos[ai*3+2];
+          for(const bi of nc){if(bi<=ai||lCnt>=ML)continue;const d2=(ax-pos[bi*3])**2+(ay-pos[bi*3+1])**2+(az-pos[bi*3+2])**2;
+            if(d2<md2){lp.push(ax,ay,az,pos[bi*3],pos[bi*3+1],pos[bi*3+2]);lCnt++}}}}}
+    if(lCnt>0){const lg=new THREE.BufferGeometry();lg.setAttribute('position',new THREE.Float32BufferAttribute(lp,3));
+      const rn=new Float32Array(lCnt*2);for(let i=0;i<rn.length;i++)rn[i]=Math.random();
+      lg.setAttribute('aR',new THREE.Float32BufferAttribute(rn,1));
+      grp.add(new THREE.LineSegments(lg,mkWireMat(fxV,amtV,mny,mxy)))}
+  }
+  else if(mode==='xray'){
+    const geo=extractGeo(liveScene);addAttribs(geo);const{mny,mxy}=getBounds(geo.attributes.position);
+    if(useTexColors)bakeTexToGeo(liveScene,geo);
+    grp.add(new THREE.Mesh(geo,mkXrayMat(fxV,amtV,mny,mxy)));
+    const wg=geo.clone();wg.setAttribute('aR',geo.attributes.aR.clone());
+    if(geo.attributes.texColor)wg.setAttribute('texColor',geo.attributes.texColor.clone());
+    const wm=mkWireMat(fxV,amtV,mny,mxy);wm.opacity=.12;grp.add(new THREE.Mesh(wg,wm));
   }
   scene.add(grp);
 }
 
-function loop(){
-  requestAnimationFrame(loop);
-  const dt=clk.getDelta();const t=clk.getElapsedTime();
-  
-  // Update animation mixer
-  if(mixer&&animPlaying)mixer.update(dt);
-  
-  // For mesh/solid with animation, re-extract geometry each frame
-  if(hasAnim&&animPlaying&&($('mode').value==='mesh'||$('mode').value==='solid')){
-    applyMode();
-  }
-  
+// ===== RENDER ONE FRAME at given time t =====
+function renderFrame(t){
+  const fxV=parseFloat($('fx').value),amtV=$('fxa').value/100;
+  // Update animation mixer to this exact time
+  // (mixer.update takes delta, so we track offlineT)
+  // Camera
   const camM=$('cam').value;
   if(camM!=='static'&&!drag){let th,ph;switch(camM){case'orbit':th=t*.3;ph=Math.PI/3.2;break;case'drift':th=t*.08+Math.sin(t*.15)*.5;ph=Math.PI/3+Math.sin(t*.12)*.2;break;case'dramatic':th=t*.2+Math.sin(t*.3)*.8;ph=Math.PI/4+Math.sin(t*.15)*.6;break;case'top':th=t*.15;ph=.3+Math.sin(t*.1)*.15;break;default:th=t*.3;ph=Math.PI/3.2}cT+=(th-cT)*.03;cP+=(ph-cP)*.03}else{cT+=(tT-cT)*.08;cP+=(tP-cP)*.08}
   const r=cR+(camM==='dramatic'?Math.sin(t*.2)*1.5:0);
   cam.position.x=Math.sin(cP)*Math.cos(cT)*r;cam.position.y=Math.cos(cP)*r;cam.position.z=Math.sin(cP)*Math.sin(cT)*r;cam.lookAt(0,0,0);
-  const fxV=parseFloat($('fx').value),amtV=$('fxa').value/100;
-  if(grp)grp.traverse(c=>{if(c.material?.uniforms){if(c.material.uniforms.uTime!==undefined)c.material.uniforms.uTime.value=t;if(c.material.uniforms.uFx!==undefined)c.material.uniforms.uFx.value=fxV;if(c.material.uniforms.uAmt!==undefined)c.material.uniforms.uAmt.value=amtV;}});
+  // Update all shader uniforms
+  if(grp)grp.traverse(c=>{if(c.material?.uniforms){const u=c.material.uniforms;
+    if(u.uTime!==undefined)u.uTime.value=t;if(u.uFx!==undefined)u.uFx.value=fxV;if(u.uAmt!==undefined)u.uAmt.value=amtV;
+    if(u.uBass!==undefined)u.uBass.value=audioBass;if(u.uMid!==undefined)u.uMid.value=audioMid;if(u.uHigh!==undefined)u.uHigh.value=audioHigh;
+    if(u.uColA!==undefined)u.uColA.value.set($('ca').value);if(u.uColB!==undefined)u.uColB.value.set($('cb').value);
+    if(u.uColorMode!==undefined)u.uColorMode.value=parseFloat($('colormode').selectedIndex);
+  }});
   ren.setRenderTarget(renderTarget);ren.render(scene,cam);ren.setRenderTarget(null);
-  postMat.uniforms.tDiffuse.value=renderTarget.texture;postMat.uniforms.uTime.value=t;postMat.uniforms.uGlitch.value=(fxV>1.5&&fxV<2.5)?amtV:0;
+  postMat.uniforms.tDiffuse.value=renderTarget.texture;postMat.uniforms.uTime.value=t;
+  postMat.uniforms.uGlitch.value=(fxV>1.5&&fxV<2.5)?amtV:0;postMat.uniforms.uBass.value=audioBass;
   ren.render(postScene,postCam);
-  if(isRec){frames.push(ren.domElement.toDataURL('image/png'));fCnt++;const fps=parseInt($('fps').value),dur=parseInt($('dur').value),mf=fps*dur;$('rs').textContent=`● ${fCnt}/${mf} (${(fCnt/fps).toFixed(1)}s)`;if(fCnt>=mf)toggleRec()}
 }
 
-function toggleRec(){const b=$('rb');if(!isRec){isRec=true;frames=[];fCnt=0;b.textContent='■ STOP';b.classList.add('rec')}else{isRec=false;b.textContent='PACKING...';b.classList.remove('rec');saveZip()}}
-async function saveZip(){const st=$('rs'),bar=$('pb');if(typeof JSZip==='undefined'){alert('JSZip loading');$('rb').textContent='● REC';return}
+// ===== LIVE LOOP (preview) =====
+let loopRunning=true;
+function loop(){
+  if(!loopRunning){requestAnimationFrame(loop);return}
+  requestAnimationFrame(loop);
+  const dt=clk.getDelta();const t=clk.getElapsedTime();
+  if(mixer&&animPlaying)mixer.update(dt);
+  if(hasAnim&&animPlaying&&($('mode').value==='mesh'||$('mode').value==='solid'||$('mode').value==='xray'))applyMode();
+  updateAudio();
+  autoFxUpdate(t);
+  renderFrame(t);
+}
+
+// ===== OFFLINE RENDER (frame-perfect, non-blocking) =====
+async function offlineRender(){
+  const fps=parseInt($('fps').value);
+  const recFrom=parseFloat($('rec-from').value)||0;
+  const recTo=parseFloat($('rec-to').value)||5;
+  const dur=Math.max(0.1,recTo-recFrom);
+  const totalFrames=Math.ceil(fps*dur);
+  const dt=1/fps;
+  const st=$('rs'),bar=$('pb');
+
+  loopRunning=false;
+  
+  // Audio start = rec-from position (or audio-start override if set)
+  const audioStart=audioElement?((parseFloat($('audio-start').value)||0)+recFrom):0;
+  let offlineFFTData=null; // pre-computed per-frame audio data
+  
+  if(audioElement&&analyser){
+    // For offline render, we pre-analyze audio by playing through it quickly
+    // But to avoid complexity, we'll just use the live analyser and seek
+    // Simpler approach: pre-read audio energy at each frame time
+    st.textContent='ANALYZING AUDIO...';
+    await new Promise(r=>setTimeout(r,50));
+    
+    offlineFFTData=[];
+    const wasPlaying=!audioElement.paused;
+    
+    for(let i=0;i<totalFrames;i++){
+      const seekTime=audioStart+i*dt;
+      if(seekTime<audioElement.duration){
+        audioElement.currentTime=seekTime;
+        // Need to briefly play to get FFT data
+        try{await audioElement.play();await new Promise(r=>setTimeout(r,8));
+          analyser.getByteFrequencyData(audioData);
+          const len=audioData.length;const bEnd=Math.floor(len*.1),mEnd=Math.floor(len*.4);
+          let b=0,m=0,h=0;
+          for(let j=0;j<bEnd;j++)b+=audioData[j];for(let j=bEnd;j<mEnd;j++)m+=audioData[j];for(let j=mEnd;j<len;j++)h+=audioData[j];
+          offlineFFTData.push({bass:b/(bEnd*255),mid:m/((mEnd-bEnd)*255),high:h/((len-mEnd)*255)});
+          audioElement.pause();
+        }catch(e){offlineFFTData.push({bass:0,mid:0,high:0})}
+      }else{offlineFFTData.push({bass:0,mid:0,high:0})}
+      
+      if(i%20===0){st.textContent=`AUDIO SCAN ${i+1}/${totalFrames}`;await new Promise(r=>setTimeout(r,0))}
+    }
+  }
+  
+  // Now render frames — offset by recFrom so visual state matches the time range
+  const startT=clk.getElapsedTime()+recFrom;
+  frames=[];
+  $('rb').textContent='RENDERING...';$('rb').classList.add('rec');
+  
+  for(let i=0;i<totalFrames;i++){
+    if(!isRec)break; // allow cancel
+    
+    const frameTime=startT+i*dt;
+    
+    // Set audio values for this frame
+    if(offlineFFTData&&offlineFFTData[i]){
+      audioBass=offlineFFTData[i].bass;
+      audioMid=offlineFFTData[i].mid;
+      audioHigh=offlineFFTData[i].high;
+    }
+    
+    // Advance animation
+    if(mixer&&animPlaying)mixer.update(dt);
+    
+    // For animated mesh/solid, rebuild geometry every 3rd frame
+    if(hasAnim&&i%3===0&&($('mode').value==='mesh'||$('mode').value==='solid'||$('mode').value==='xray')){
+      liveScene.updateMatrixWorld(true);
+      applyMode();
+    }
+    
+    renderFrame(frameTime);
+    frames.push(ren.domElement.toDataURL('image/png'));
+    
+    st.textContent=`RENDER ${i+1}/${totalFrames} (${((i+1)/fps).toFixed(1)}s)`;
+    bar.style.width=(i/totalFrames*40)+'%';
+    
+    // YIELD EVERY FRAME to prevent browser freeze
+    await new Promise(r=>setTimeout(r,0));
+  }
+  
+  if(!isRec){loopRunning=true;clk.getDelta();return} // cancelled
+  
+  // Resume audio
+  if(audioElement){audioElement.currentTime=audioStart;try{audioElement.play()}catch(e){}}
+  
+  loopRunning=true;
+  clk.getDelta();
+  
+  st.textContent='PACKING...';
+  await saveZip();
+}
+
+function toggleRec(){
+  if(!isRec){
+    isRec=true;
+    offlineRender().then(()=>{isRec=false});
+  }else{
+    // Allow cancel mid-render
+    isRec=false;loopRunning=true;
+    $('rb').textContent='● REC';$('rb').classList.remove('rec');
+    $('rs').textContent='CANCELLED';setTimeout(()=>$('rs').textContent='',2000);
+  }
+}
+
+async function saveZip(){
+  const st=$('rs'),bar=$('pb');
+  if(typeof JSZip==='undefined'){alert('JSZip loading');$('rb').textContent='● REC';return}
   const fps=$('fps').value,zip=new JSZip(),f=zip.folder(`frames_${fps}fps`);
-  for(let i=0;i<frames.length;i++){f.file(`frame_${String(i).padStart(5,'0')}.png`,frames[i].split(',')[1],{base64:true});bar.style.width=(i/frames.length*50)+'%';st.textContent=`PACK ${i+1}/${frames.length}`;if(i%8===0)await new Promise(r=>setTimeout(r,0))}
-  st.textContent='ZIP...';const bl=await zip.generateAsync({type:'blob'},m=>{bar.style.width=(50+m.percent*.5)+'%'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download=`phantom_${fps}fps_${frames.length}f_${Date.now()}.zip`;a.click();URL.revokeObjectURL(a.href);
-  st.textContent=`${frames.length}F @ ${fps}FPS SAVED`;bar.style.width='0';frames=[];$('rb').textContent='● REC';setTimeout(()=>st.textContent='',4000)}
+  for(let i=0;i<frames.length;i++){
+    f.file(`frame_${String(i).padStart(5,'0')}.png`,frames[i].split(',')[1],{base64:true});
+    bar.style.width=(40+i/frames.length*30)+'%';
+    st.textContent=`PACK ${i+1}/${frames.length}`;
+    if(i%8===0)await new Promise(r=>setTimeout(r,0));
+  }
+  st.textContent='COMPRESSING...';
+  const bl=await zip.generateAsync({type:'blob'},m=>{bar.style.width=(70+m.percent*.3)+'%'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(bl);
+  a.download=`phantom_${fps}fps_${frames.length}f_${Date.now()}.zip`;a.click();URL.revokeObjectURL(a.href);
+  st.textContent=`${frames.length} FRAMES @ ${fps}FPS — DONE`;bar.style.width='0';frames=[];
+  $('rb').textContent='● REC';$('rb').classList.remove('rec');
+  setTimeout(()=>st.textContent='',4000);
+}
 
 init();loop();
 </script>
