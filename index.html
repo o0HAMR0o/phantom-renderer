@@ -72,11 +72,15 @@ canvas#cv{display:block;position:fixed;inset:0}
     <div class="g"><label>MODE</label><select id="mode">
       <option value="original">ORIGINAL</option><option value="particles">PARTICLES</option><option value="mesh">MESH</option><option value="solid">SOLID</option>
       <option value="pointlines">PTS+LINES</option><option value="xray">X-RAY</option>
+      <option value="dots">DENSE DOTS</option><option value="sparks">SPARKS</option>
+      <option value="cloud">CLOUD</option><option value="slices">SLICES</option><option value="laserrain">LASER RAIN</option>
     </select></div>
     <button class="btn" id="tex-toggle" title="Use original texture colors">TEX</button>
     <div class="g"><label>COLOR</label><select id="colormode">
       <option value="gradient">GRADIENT</option><option value="rainbow">RAINBOW</option><option value="mono">MONO</option>
       <option value="heat">HEAT</option><option value="depth">DEPTH</option><option value="fresnel">FRESNEL</option>
+      <option value="ocean">OCEAN</option><option value="sunset">SUNSET</option><option value="acid">ACID</option>
+      <option value="ice">ICE</option><option value="ember">EMBER</option><option value="galaxy">GALAXY</option>
     </select></div>
     <div class="g"><label>A</label><input type="color" id="ca" value="#00ccff"></div>
     <div class="g"><label>B</label><input type="color" id="cb" value="#ff00ff"></div>
@@ -85,6 +89,9 @@ canvas#cv{display:block;position:fixed;inset:0}
       <option value="0">NONE</option><option value="1">WAVE</option><option value="2">GLITCH</option>
       <option value="3">DISTORT</option><option value="4">EXPLODE</option><option value="5">PULSE</option>
       <option value="6">SHATTER</option><option value="7">SPIRAL</option>
+      <option value="8">MELT</option><option value="9">PIXELATE</option><option value="10">INFLATE</option>
+      <option value="11">SCATTER</option><option value="12">RIPPLE</option><option value="13">FRACTURE</option>
+      <option value="14">VORTEX</option>
     </select></div>
     <div class="g"><label>AMT</label><input type="range" id="fxa" min="0" max="100" value="50"></div>
     <div class="g"><label>LIGHT</label><input type="range" id="li" min="0" max="100" value="60"></div>
@@ -99,7 +106,7 @@ canvas#cv{display:block;position:fixed;inset:0}
     <div class="g"><label>RZ</label><input type="range" id="rz" min="-180" max="180" value="0" style="width:40px"></div>
     <button class="btn" id="rot-reset" title="Reset rotation">⟲</button>
     <div class="sp"></div>
-    <div class="g"><label>CAM</label><select id="cam"><option value="orbit">ORBIT</option><option value="drift">DRIFT</option><option value="dramatic">DRAMATIC</option><option value="top">TOP</option><option value="static">STATIC</option></select></div>
+    <div class="g"><label>CAM</label><select id="cam"><option value="orbit">ORBIT</option><option value="drift">DRIFT</option><option value="dramatic">DRAMATIC</option><option value="top">TOP</option><option value="static">STATIC</option><option value="spin">FAST SPIN</option><option value="pendulum">PENDULUM</option><option value="dolly">DOLLY IN</option><option value="circle">CIRCLE LOW</option><option value="crane">CRANE</option></select></div>
     <div class="sp"></div>
     <label class="btn" style="position:relative;overflow:hidden">GLB<input type="file" accept=".glb,.gltf" id="file-new" style="position:absolute;opacity:0;inset:0;cursor:pointer"></label>
     <label class="btn" style="position:relative;overflow:hidden" id="audio-btn">♪ AUDIO<input type="file" accept="audio/*" id="file-audio" style="position:absolute;opacity:0;inset:0;cursor:pointer"></label>
@@ -212,25 +219,38 @@ vec3 fxDisplace(vec3 p,float seed){
   else if(fx<4.5){vec3 dir=normalize(p+vec3(.001));float wave=sin(length(p)*5.-uTime*4.)*.5+.5;p+=dir*wave*amt*(1.+aB*3.)*1.2;}
   else if(fx<5.5){float beat=pow(abs(sin(uTime*3.14159*1.5)),2.)+aB*2.;p*=1.+beat*amt*.5;p+=normalize(p+vec3(.001))*sin(length(p)*8.-uTime*5.)*.15*amt;}
   else if(fx<6.5){float cell=floor(seed*20.);float burst=step(.7-aB*.4,fract(sin(cell*77.7+floor(uTime*3.))*999.));vec3 dir=normalize(vec3(fract(sin(cell*11.)*.5)-.25,fract(sin(cell*22.)*.5)-.25,fract(sin(cell*33.)*.5)-.25));p+=dir*burst*amt*(2.+aB*4.);p.y-=burst*amt*.5;}
-  else{float a=atan(p.z,p.x);float r=length(p.xz);float twist=amt*(2.+aM*4.)*sin(p.y*2.+uTime);a+=twist;p.x=cos(a)*r;p.z=sin(a)*r;p.y+=sin(r*4.-uTime*3.)*.2*amt;}
+  else if(fx<7.5){float a=atan(p.z,p.x);float r=length(p.xz);float twist=amt*(2.+aM*4.)*sin(p.y*2.+uTime);a+=twist;p.x=cos(a)*r;p.z=sin(a)*r;p.y+=sin(r*4.-uTime*3.)*.2*amt;}
+  else if(fx<8.5){p.y-=amt*pow(max(0.,(p.y+1.5)/3.),2.)*sin(uTime+length(p.xz)*3.)*.8;p.x+=snoise3(p*2.+uTime*.3)*amt*.3;p.z+=snoise3(p*2.+vec3(50.,0.,0.)+uTime*.3)*amt*.3;}
+  else if(fx<9.5){float sz=.15+amt*.3;p=floor(p/sz+.5)*sz;p+=vec3(sin(uTime+p.y*3.),cos(uTime*1.3+p.x*2.),sin(uTime*.7+p.z*4.))*.02*amt;}
+  else if(fx<10.5){vec3 dir=normalize(p+.001);float inf=amt*(.5+aB*1.5)*(1.+.3*sin(uTime*2.+length(p)*4.));p+=dir*inf;}
+  else if(fx<11.5){float id=fract(sin(seed*12345.)*9999.);float go=smoothstep(.3,.7,sin(uTime*.5+id*6.28))*amt;vec3 dir=vec3(sin(id*100.),cos(id*200.),sin(id*300.));p+=dir*go*2.;p.y-=go*go*.5;}
+  else if(fx<12.5){float d=length(p);float wave=sin(d*8.-uTime*5.)*.5+.5;vec3 dir=normalize(p+.001);p+=dir*wave*amt*.5*(1.+aB*2.);p.y+=sin(d*12.-uTime*6.)*.05*amt;}
+  else if(fx<13.5){float plate=floor(p.y*5.+.5)/5.;float crack=step(.6-aB*.3,fract(sin(plate*88.8+floor(uTime*2.))*777.));vec3 off=vec3(sin(plate*33.),0.,cos(plate*44.))*(crack*amt*1.5);p+=off;p.y+=crack*sin(uTime*3.)*.1*amt;}
+  else{float a=atan(p.z,p.x);float r=length(p.xz);float pull=amt*(1.5+aB*3.);a+=pull/(r+.3)*sin(uTime*2.+r*3.);r+=sin(a*3.+uTime)*amt*.15;p.x=cos(a)*r;p.z=sin(a)*r;p.y+=cos(r*5.-uTime*3.)*.12*amt;}
   return p;
 }`;
 
 // ===== COLOR MODE GLSL =====
 // Injected as a function that takes position, normal, seed and returns vec3 color
 function getColorGLSL(){return `
-uniform float uColorMode; // 0=gradient,1=rainbow,2=mono,3=heat,4=depth,5=fresnel
+uniform float uColorMode;
 uniform vec3 uColA;uniform vec3 uColB;
 uniform float uMinY;uniform float uMaxY;
 vec3 hsl2rgb(float h,float s,float l){vec3 c=clamp(abs(mod(h*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.);return l+s*(c-.5)*(1.-abs(2.*l-1.));}
 vec3 getColor(vec3 pos,vec3 norm,float seed,vec3 viewDir){
   float t=(pos.y-uMinY)/(uMaxY-uMinY+.001);
-  if(uColorMode<0.5)return mix(uColA,uColB,t); // gradient
-  if(uColorMode<1.5)return hsl2rgb(t*.85+seed*.1,1.,.55); // rainbow
-  if(uColorMode<2.5){float v=t*.5+.3;return vec3(v)*uColA/max(max(uColA.r,uColA.g),uColA.b+.01);} // mono
-  if(uColorMode<3.5){return mix(vec3(0.,.1,.4),mix(vec3(1.,.3,0.),vec3(1.,1.,.2),t),t);} // heat
-  if(uColorMode<4.5){float d=length(pos)*.3;return mix(uColA,uColB,clamp(d,0.,1.));} // depth
-  float f=pow(1.-abs(dot(normalize(norm),viewDir)),2.);return mix(uColA*.2,uColB,f); // fresnel
+  if(uColorMode<0.5)return mix(uColA,uColB,t);
+  if(uColorMode<1.5)return hsl2rgb(t*.85+seed*.1,1.,.55);
+  if(uColorMode<2.5){float v=t*.5+.3;return vec3(v)*uColA/max(max(uColA.r,uColA.g),uColA.b+.01);}
+  if(uColorMode<3.5)return mix(vec3(0.,.1,.4),mix(vec3(1.,.3,0.),vec3(1.,1.,.2),t),t);
+  if(uColorMode<4.5){float d=length(pos)*.3;return mix(uColA,uColB,clamp(d,0.,1.));}
+  if(uColorMode<5.5){float f=pow(1.-abs(dot(normalize(norm),viewDir)),2.);return mix(uColA*.2,uColB,f);}
+  if(uColorMode<6.5)return mix(vec3(0.,.05,.15),mix(vec3(0.,.4,.6),vec3(.4,.9,1.),t),t);
+  if(uColorMode<7.5)return mix(vec3(.1,0.,.2),mix(vec3(.9,.3,.1),vec3(1.,.9,.3),t),t);
+  if(uColorMode<8.5){float h=.25+t*.15+sin(pos.x*10.)*.05;return hsl2rgb(h,1.,.45+t*.2);}
+  if(uColorMode<9.5)return mix(vec3(.6,.8,1.),mix(vec3(.1,.3,.6),vec3(1.,1.,1.),t),t);
+  if(uColorMode<10.5)return mix(vec3(.05,0.,0.),mix(vec3(.8,.2,0.),vec3(1.,.6,.1),t),pow(t,1.5));
+  return mix(vec3(.05,0.,.1),mix(vec3(.2,.0,.5),vec3(.6,.2,1.),t),t)+vec3(sin(pos.x*8.+pos.z*6.)*.05);
 }`;}
 
 // ===== SURFACE SAMPLING =====
@@ -455,8 +475,8 @@ let useTexColors=false; // TEX toggle state
 // ===== AUTO FX (global) =====
 let autoFxOn=false, autoFxLastSwitch=0;
 const autoFxCooldown=2.0;
-const fxOptions=['0','1','2','3','4','5','6','7'];
-const modeOptionsArr=['particles','mesh','solid','pointlines','xray'];
+const fxOptions=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
+const modeOptionsArr=['particles','mesh','solid','pointlines','xray','dots','sparks','cloud','slices','laserrain'];
 function autoFxUpdate(t){
   if(!autoFxOn||!analyser)return;
   if(audioBass>.55&&(t-autoFxLastSwitch)>autoFxCooldown){
@@ -652,6 +672,212 @@ function applyMode(){
     if(geo.attributes.texColor)wg.setAttribute('texColor',geo.attributes.texColor.clone());
     const wm=mkWireMat(fxV,amtV,mny,mxy);wm.opacity=.12;grp.add(new THREE.Mesh(wg,wm));
   }
+  else if(mode==='dots'&&lastPos){
+    // Dense small dots with higher count feel
+    const pos=lastPos,cnt=pos.length/3,geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.BufferAttribute(pos.slice(),3));
+    const{mny,mxy}=getBounds({getY:i=>pos[i*3+1],count:cnt});addAttribs(geo);
+    if(useTexColors){const tc=sampleOrigColors(liveScene,pos,cnt);geo.setAttribute('texColor',new THREE.BufferAttribute(tc,3))}
+    const m=mkPtsMat(fxV,amtV,mny,mxy);m.uniforms.uS.value=1.2;grp.add(new THREE.Points(geo,m));
+  }
+  else if(mode==='sparks'&&lastPos){
+    // Bright elongated sparks using line segments from each point
+    const pos=lastPos,cnt=Math.min(pos.length/3,60000),geo=new THREE.BufferGeometry();
+    const lp=new Float32Array(cnt*6),rn=new Float32Array(cnt*2);
+    for(let i=0;i<cnt;i++){const x=pos[i*3],y=pos[i*3+1],z=pos[i*3+2];
+      const dx=(Math.random()-.5)*.06,dy=(Math.random()-.5)*.06,dz=(Math.random()-.5)*.06;
+      lp[i*6]=x;lp[i*6+1]=y;lp[i*6+2]=z;lp[i*6+3]=x+dx;lp[i*6+4]=y+dy;lp[i*6+5]=z+dz;
+      rn[i*2]=Math.random();rn[i*2+1]=Math.random()}
+    geo.setAttribute('position',new THREE.BufferAttribute(lp,3));geo.setAttribute('aR',new THREE.BufferAttribute(rn,1));
+    const{mny,mxy}=getBounds({getY:i=>lp[i*3+1],count:cnt*2});
+    grp.add(new THREE.LineSegments(geo,mkWireMat(fxV,amtV,mny,mxy)));
+  }
+  else if(mode==='cloud'&&lastPos){
+    // Large soft particles for volumetric cloud look
+    const pos=lastPos,cnt=pos.length/3,geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.BufferAttribute(pos.slice(),3));
+    const{mny,mxy}=getBounds({getY:i=>pos[i*3+1],count:cnt});addAttribs(geo);
+    if(useTexColors){const tc=sampleOrigColors(liveScene,pos,cnt);geo.setAttribute('texColor',new THREE.BufferAttribute(tc,3))}
+    const m=mkPtsMat(fxV,amtV,mny,mxy);m.uniforms.uS.value=8.;m.blending=THREE.AdditiveBlending;m.opacity=.15;grp.add(new THREE.Points(geo,m));
+    // Add small sharp particles on top
+    const m2=mkPtsMat(fxV,amtV,mny,mxy);m2.uniforms.uS.value=1.5;grp.add(new THREE.Points(geo.clone(),m2));
+  }
+  else if(mode==='slices'){
+    const geo=extractGeo(liveScene);addAttribs(geo);const{mny,mxy}=getBounds(geo.attributes.position);
+    if(useTexColors)bakeTexToGeo(liveScene,geo);
+    const u={...commonUni(fxV,amtV,mny,mxy)};
+    // Solid slice bands — many thin opaque slices with bright edges
+    const sliceMat=new THREE.ShaderMaterial({uniforms:u,vertexShader:NOISE_GLSL+FX_FUNC+colorGLSL+`
+      attribute float aR;attribute vec3 texColor;varying vec3 vC;varying float vY;varying vec3 vN;varying vec3 vP;uniform float uUseTex;
+      void main(){vec3 p=position;p=fxDisplace(p,aR);vec3 vd=normalize(cameraPosition-p);vec3 bc=getColor(position,normal,aR,vd);
+      vC=uUseTex>.5&&length(texColor)>.01?texColor:bc;
+      vY=p.y;vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+    fragmentShader:`varying vec3 vC;varying float vY;varying vec3 vN;varying vec3 vP;
+      uniform float uTime;uniform float uMinY;uniform float uMaxY;
+      void main(){
+        float range=uMaxY-uMinY+.001;
+        float sliceCount=60.;
+        float y01=(vY-uMinY)/range;
+        float slicePhase=fract(y01*sliceCount+uTime*.3);
+        // Sharp band: visible when slicePhase is in [0.15, 0.85], discard the gaps
+        float gap=.12;
+        if(slicePhase<gap||slicePhase>(1.-gap))discard;
+        // Edge brightness — bright at the cut edges (near gap boundaries)
+        float edgeDist=min(slicePhase-gap,(1.-gap)-slicePhase);
+        float edgeBright=1.+2.*exp(-edgeDist*40.);
+        // Basic lighting
+        vec3 n=normalize(vN);vec3 vd=normalize(-vP);
+        vec3 ld=normalize(vec3(.5,.8,.6));
+        float diff=max(dot(n,ld),0.)*.7+.2;
+        float rim=pow(1.-max(dot(n,vd),0.),2.)*.3;
+        vec3 col=vC*(diff+rim)*edgeBright;
+        // Slice edge glow color
+        col+=vC*exp(-edgeDist*60.)*.5;
+        gl_FragColor=vec4(col,.95);
+      }`,
+    transparent:true,side:THREE.DoubleSide,depthWrite:true});
+    grp.add(new THREE.Mesh(geo,sliceMat));
+    // Wireframe overlay on slice edges for contour lines
+    const wGeo=geo.clone();wGeo.setAttribute('aR',geo.attributes.aR.clone());
+    if(geo.attributes.texColor)wGeo.setAttribute('texColor',geo.attributes.texColor.clone());
+    const wireMat=new THREE.ShaderMaterial({uniforms:{...commonUni(fxV,amtV,mny,mxy)},
+      vertexShader:NOISE_GLSL+FX_FUNC+`attribute float aR;varying float vY;
+      void main(){vec3 p=position;p=fxDisplace(p,aR);vY=p.y;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+      fragmentShader:`varying float vY;uniform float uTime;uniform float uMinY;uniform float uMaxY;uniform vec3 uColA;uniform vec3 uColB;
+      void main(){float range=uMaxY-uMinY+.001;float y01=(vY-uMinY)/range;
+        float slicePhase=fract(y01*60.+uTime*.3);
+        float gap=.12;float edgeDist=min(abs(slicePhase-gap),abs(slicePhase-(1.-gap)));
+        float line=exp(-edgeDist*80.);
+        if(line<.1)discard;
+        vec3 col=mix(uColA,uColB,y01)*line*1.5;
+        gl_FragColor=vec4(col,line*.8);}`,
+      wireframe:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending});
+    grp.add(new THREE.Mesh(wGeo,wireMat));
+  }
+  else if(mode==='laserrain'&&liveScene){
+    liveScene.updateMatrixWorld(true);
+    const colGeo=extractGeo(liveScene);
+    const colMesh=new THREE.Mesh(colGeo);colMesh.updateMatrixWorld(true);
+    const rc=new THREE.Raycaster();
+    const bb=new THREE.Box3().setFromBufferAttribute(colGeo.attributes.position);
+    const bSz=bb.getSize(new THREE.Vector3()),bC=bb.getCenter(new THREE.Vector3());
+    const spX=bSz.x*1.5,spZ=bSz.z*1.5,spY=bSz.y*1.3;
+    const topY=bb.max.y+bSz.y*.8,botY=bb.min.y-bSz.y*.4;
+    const leftX=bC.x-spX*.9,rightX=bC.x+spX*.9;
+    const frontZ=bC.z+spZ*.9,backZ=bC.z-spZ*.9;
+    const cA=new THREE.Color($('ca').value),cB=new THREE.Color($('cb').value);
+
+    // --- Thin laser lines ---
+    const lv=[],lc=[],lr=[];
+    function addLaser(ox,oy,oz,dx,dy,dz,maxD){
+      rc.set(new THREE.Vector3(ox,oy,oz),new THREE.Vector3(dx,dy,dz));rc.far=maxD;
+      const hits=rc.intersectObject(colMesh);
+      const t=Math.random(),col=cA.clone().lerp(cB,t),br=.2+Math.random()*.5;
+      if(hits.length>0){
+        const h=hits[0].point;
+        lv.push(ox,oy,oz,h.x,h.y,h.z);
+        lc.push(col.r*br*.15,col.g*br*.15,col.b*br*.15,col.r*br*.7,col.g*br*.7,col.b*br*.7);
+        lr.push(Math.random(),Math.random());
+        // Continue from other side
+        const ex=ox+dx*maxD,ey=oy+dy*maxD,ez=oz+dz*maxD;
+        rc.set(new THREE.Vector3(ex,ey,ez),new THREE.Vector3(-dx,-dy,-dz));rc.far=maxD;
+        const h2=rc.intersectObject(colMesh);
+        if(h2.length>0){
+          lv.push(ex,ey,ez,h2[0].point.x,h2[0].point.y,h2[0].point.z);
+          lc.push(col.r*br*.08,col.g*br*.08,col.b*br*.08,col.r*br*.5,col.g*br*.5,col.b*br*.5);
+          lr.push(Math.random(),Math.random());
+        }
+      }else{
+        lv.push(ox,oy,oz,ox+dx*maxD,oy+dy*maxD,oz+dz*maxD);
+        lc.push(col.r*br*.04,col.g*br*.04,col.b*br*.04,col.r*br*.03,col.g*br*.03,col.b*br*.03);
+        lr.push(Math.random(),Math.random());
+      }
+    }
+    // Vertical 500
+    for(let i=0;i<500;i++){addLaser(bC.x+(Math.random()-.5)*spX,topY,bC.z+(Math.random()-.5)*spZ,0,-1,0,topY-botY+1)}
+    // Left→Right 200
+    for(let i=0;i<200;i++){addLaser(leftX,bC.y+(Math.random()-.5)*spY,bC.z+(Math.random()-.5)*spZ,1,0,0,spX*2)}
+    // Right→Left 200
+    for(let i=0;i<200;i++){addLaser(rightX,bC.y+(Math.random()-.5)*spY,bC.z+(Math.random()-.5)*spZ,-1,0,0,spX*2)}
+    // Front→Back 150
+    for(let i=0;i<150;i++){addLaser(bC.x+(Math.random()-.5)*spX,bC.y+(Math.random()-.5)*spY,frontZ,0,0,-1,spZ*2)}
+    // Back→Front 150
+    for(let i=0;i<150;i++){addLaser(bC.x+(Math.random()-.5)*spX,bC.y+(Math.random()-.5)*spY,backZ,0,0,1,spZ*2)}
+
+    const{mny,mxy}=getBounds({getY:i=>lv[i*3+1]||0,count:lv.length/3});
+    // Laser line geometry
+    if(lv.length>0){
+      const lg=new THREE.BufferGeometry();
+      lg.setAttribute('position',new THREE.Float32BufferAttribute(lv,3));
+      lg.setAttribute('color',new THREE.Float32BufferAttribute(lc,3));
+      lg.setAttribute('aR',new THREE.Float32BufferAttribute(lr,1));
+      grp.add(new THREE.LineSegments(lg,new THREE.ShaderMaterial({
+        uniforms:{...commonUni(fxV,amtV,mny,mxy)},
+        vertexShader:NOISE_GLSL+FX_FUNC+`attribute vec3 color;attribute float aR;varying vec3 vC;varying float vA;
+          void main(){vec3 p=position;p=fxDisplace(p,aR);vC=color;vA=.5+.5*sin(uTime*12.+aR*80.);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+        fragmentShader:`varying vec3 vC;varying float vA;void main(){gl_FragColor=vec4(vC*2.,vA);}`,
+        transparent:true,depthWrite:false,blending:THREE.AdditiveBlending
+      })));
+    }
+
+    // --- Model surface as SLICES contours (the key visual) ---
+    // The model itself is shown only as horizontal/vertical slice contour lines
+    addAttribs(colGeo);
+    if(useTexColors)bakeTexToGeo(liveScene,colGeo);
+    const sliceU={...commonUni(fxV,amtV,mny,mxy)};
+    // Solid slice bands — thin opaque rings where lasers intersect model
+    grp.add(new THREE.Mesh(colGeo,new THREE.ShaderMaterial({uniforms:sliceU,
+      vertexShader:NOISE_GLSL+FX_FUNC+colorGLSL+`
+        attribute float aR;attribute vec3 texColor;varying vec3 vC;varying float vY;varying float vX;varying float vZ;varying vec3 vN;varying vec3 vP;uniform float uUseTex;
+        void main(){vec3 p=position;p=fxDisplace(p,aR);
+        vec3 vd=normalize(cameraPosition-p);vec3 bc=getColor(position,normal,aR,vd);
+        vC=uUseTex>.5&&length(texColor)>.01?texColor:bc;
+        vY=p.y;vX=p.x;vZ=p.z;vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+      fragmentShader:`varying vec3 vC;varying float vY;varying float vX;varying float vZ;varying vec3 vN;varying vec3 vP;
+        uniform float uTime;uniform float uMinY;uniform float uMaxY;uniform vec3 uColA;uniform vec3 uColB;
+        void main(){
+          float rangeY=uMaxY-uMinY+.001;
+          float y01=(vY-uMinY)/rangeY;
+          // Horizontal slices
+          float hSlice=fract(y01*50.+uTime*.2);
+          float hLine=smoothstep(.0,.02,hSlice)*smoothstep(.08,.06,hSlice);
+          // Vertical slices (X axis)
+          float xn=(vX-uMinY)/rangeY; // approximate normalization
+          float vSlice=fract(xn*30.+uTime*.15);
+          float vLine=smoothstep(.0,.02,vSlice)*smoothstep(.07,.05,vSlice);
+          // Depth slices (Z axis)
+          float zn=(vZ-uMinY)/rangeY;
+          float zSlice=fract(zn*30.-uTime*.1);
+          float zLine=smoothstep(.0,.02,zSlice)*smoothstep(.07,.05,zSlice);
+          // Combine — show whichever slice line is active
+          float line=max(hLine,max(vLine*.6,zLine*.4));
+          if(line<.05)discard;
+          // Rim lighting for depth
+          vec3 n=normalize(vN);vec3 vd=normalize(-vP);
+          float rim=pow(1.-max(dot(n,vd),0.),2.)*.4;
+          // Edge glow at slice boundaries
+          vec3 col=vC*(line*.8+rim)+uColB*hLine*.15;
+          gl_FragColor=vec4(col,line*.9);
+        }`,
+      transparent:true,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending
+    })));
+
+    // Extra: wireframe contour overlay for sharper edges
+    const wGeo2=colGeo.clone();wGeo2.setAttribute('aR',colGeo.attributes.aR.clone());
+    grp.add(new THREE.Mesh(wGeo2,new THREE.ShaderMaterial({uniforms:{...commonUni(fxV,amtV,mny,mxy)},
+      vertexShader:NOISE_GLSL+FX_FUNC+`attribute float aR;varying float vY;
+        void main(){vec3 p=position;p=fxDisplace(p,aR);vY=p.y;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+      fragmentShader:`varying float vY;uniform float uTime;uniform float uMinY;uniform float uMaxY;uniform vec3 uColA;
+        void main(){float y01=(vY-uMinY)/(uMaxY-uMinY+.001);
+        float s=fract(y01*50.+uTime*.2);
+        float line=smoothstep(.0,.015,s)*smoothstep(.06,.045,s);
+        if(line<.1)discard;
+        gl_FragColor=vec4(uColA*line*1.2,line*.5);}`,
+      wireframe:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending
+    })));
+  }
   scene.add(grp);
 }
 
@@ -662,7 +888,17 @@ function renderFrame(t){
   // (mixer.update takes delta, so we track offlineT)
   // Camera
   const camM=$('cam').value;
-  if(camM!=='static'&&!drag){let th,ph;switch(camM){case'orbit':th=t*.3;ph=Math.PI/3.2;break;case'drift':th=t*.08+Math.sin(t*.15)*.5;ph=Math.PI/3+Math.sin(t*.12)*.2;break;case'dramatic':th=t*.2+Math.sin(t*.3)*.8;ph=Math.PI/4+Math.sin(t*.15)*.6;break;case'top':th=t*.15;ph=.3+Math.sin(t*.1)*.15;break;default:th=t*.3;ph=Math.PI/3.2}cT+=(th-cT)*.03;cP+=(ph-cP)*.03}else{cT+=(tT-cT)*.08;cP+=(tP-cP)*.08}
+  if(camM!=='static'&&!drag){let th,ph;switch(camM){
+    case'orbit':th=t*.3;ph=Math.PI/3.2;break;
+    case'drift':th=t*.08+Math.sin(t*.15)*.5;ph=Math.PI/3+Math.sin(t*.12)*.2;break;
+    case'dramatic':th=t*.2+Math.sin(t*.3)*.8;ph=Math.PI/4+Math.sin(t*.15)*.6;break;
+    case'top':th=t*.15;ph=.3+Math.sin(t*.1)*.15;break;
+    case'spin':th=t*1.2;ph=Math.PI/3;break;
+    case'pendulum':th=Math.sin(t*.4)*1.2;ph=Math.PI/3+Math.sin(t*.25)*.3;break;
+    case'dolly':th=t*.1;ph=Math.PI/3;cR=Math.max(1.5,4.5-t*.15);break;
+    case'circle':th=t*.25;ph=Math.PI/2.2+Math.sin(t*.2)*.1;break;
+    case'crane':th=t*.15;ph=Math.PI/2-t*.03;break;
+    default:th=t*.3;ph=Math.PI/3.2}cT+=(th-cT)*.03;cP+=(ph-cP)*.03}else{cT+=(tT-cT)*.08;cP+=(tP-cP)*.08}
   const r=cR+(camM==='dramatic'?Math.sin(t*.2)*1.5:0);
   cam.position.x=Math.sin(cP)*Math.cos(cT)*r;cam.position.y=Math.cos(cP)*r;cam.position.z=Math.sin(cP)*Math.sin(cT)*r;cam.lookAt(0,0,0);
   // Update all shader uniforms
