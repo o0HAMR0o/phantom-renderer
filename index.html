@@ -84,8 +84,19 @@ canvas#cv{display:block;position:fixed;inset:0}
     </select></div>
     <div class="g"><label>A</label><input type="color" id="ca" value="#00ccff"></div>
     <div class="g"><label>B</label><input type="color" id="cb" value="#ff00ff"></div>
-    <div class="sp"></div>
-    <div class="g"><label>FX</label><select id="fx">
+    <div class="g"><label>SURFACE</label><select id="surface">
+      <option value="default">DEFAULT</option>
+      <option value="chrome">CHROME</option>
+      <option value="glass">GLASS</option>
+      <option value="plastic">PLASTIC</option>
+      <option value="holographic">HOLOGRAPHIC</option>
+      <option value="matte">MATTE</option>
+      <option value="ceramic">CERAMIC</option>
+      <option value="obsidian">OBSIDIAN</option>
+      <option value="iridescent">IRIDESCENT</option>
+    </select></div>
+    <div class="g"><label>OPACITY</label><input type="range" id="opacity" min="0" max="100" value="100" style="width:40px"></div>
+    <div class="sp"></div><div class="g"><label>FX</label><select id="fx">
       <option value="0">NONE</option><option value="1">WAVE</option><option value="2">GLITCH</option>
       <option value="3">DISTORT</option><option value="4">EXPLODE</option><option value="5">PULSE</option>
       <option value="6">SHATTER</option><option value="7">SPIRAL</option>
@@ -426,13 +437,147 @@ function mkWireMat(fx,amt,mny,mxy){const u=commonUni(fx,amt,mny,mxy);
     vC=uUseTex>.5&&length(texColor)>.01?texColor:baseC;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
   fragmentShader:`varying vec3 vC;void main(){gl_FragColor=vec4(vC*.85,.55);}`,wireframe:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})}
 
-function mkSolidMat(fx,amt,mny,mxy){const u={...commonUni(fx,amt,mny,mxy),uLD:{value:new THREE.Vector3(.5,.8,.6).normalize()}};
+function mkSolidMat(fx,amt,mny,mxy){
+  const surf=$('surface').value;
+  const opVal=parseInt($('opacity').value)/100;
+  const u={...commonUni(fx,amt,mny,mxy),uLD:{value:new THREE.Vector3(.5,.8,.6).normalize()},uLD2:{value:new THREE.Vector3(-.6,-.3,-.5).normalize()},uSurf:{value:['default','chrome','glass','plastic','holographic','matte','ceramic','obsidian','iridescent'].indexOf(surf)*1.},uOpacity:{value:opVal}};
   return new THREE.ShaderMaterial({uniforms:u,vertexShader:NOISE_GLSL+FX_FUNC+colorGLSL+`
-    attribute float aR;attribute vec3 texColor;varying vec3 vC;varying vec3 vN;varying vec3 vP;uniform float uUseTex;
+    attribute float aR;attribute vec3 texColor;varying vec3 vC;varying vec3 vN;varying vec3 vP;varying vec3 vWP;varying vec3 vWN;uniform float uUseTex;
     void main(){vec3 p=position;p=fxDisplace(p,aR);vec3 vd=normalize(cameraPosition-p);vec3 baseC=getColor(position,normal,aR,vd);
-    vC=uUseTex>.5&&length(texColor)>.01?texColor:baseC;vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
-  fragmentShader:`varying vec3 vC,vN,vP;uniform vec3 uLD;void main(){vec3 n=normalize(vN);float diff=max(dot(n,uLD),0.)*.9;vec3 vd=normalize(-vP);float spec=pow(max(dot(n,normalize(uLD+vd)),0.),40.)*.3;float rim=pow(1.-max(dot(n,vd),0.),3.)*.25;gl_FragColor=vec4(vC*(diff+.12)+spec+rim*vC,.92);}`,
-  transparent:true,side:THREE.DoubleSide})}
+    vC=uUseTex>.5&&length(texColor)>.01?texColor:baseC;
+    vN=normalMatrix*normal;vP=(modelViewMatrix*vec4(p,1.)).xyz;vWP=p;vWN=normal;
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+  fragmentShader:`
+    varying vec3 vC,vN,vP,vWP,vWN;
+    uniform vec3 uLD;uniform vec3 uLD2;uniform float uTime;uniform float uSurf;uniform float uOpacity;
+    uniform vec3 uColA;uniform vec3 uColB;
+    vec3 hsl(float h,float s,float l){vec3 c=clamp(abs(mod(h*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.);return l+s*(c-.5)*(1.-abs(2.*l-1.));}
+    void main(){
+      vec3 n=normalize(vN);vec3 vd=normalize(-vP);
+      vec3 h1=normalize(uLD+vd);vec3 h2=normalize(uLD2+vd);
+      float NdL=max(dot(n,uLD),0.);float NdL2=max(dot(n,uLD2),0.);
+      float NdV=max(dot(n,vd),0.);
+      float spec1=pow(max(dot(n,h1),0.),60.);float spec2=pow(max(dot(n,h2),0.),40.);
+      float fresnel=pow(1.-NdV,4.);float rim=pow(1.-NdV,3.);
+      vec3 refl=reflect(-vd,n);
+      vec3 col;float alpha=.95;
+
+      if(uSurf<.5){ // DEFAULT
+        col=vC*(NdL*.75+.2)+spec1*.35*vec3(1.)+rim*vC*.15;
+      }
+      else if(uSurf<1.5){ // CHROME — ref img2: near-monochrome, sharp high-contrast reflections
+        // Fake environment: sharp bands based on reflection direction
+        float envY=refl.y*.5+.5;
+        float envBand=smoothstep(.48,.5,envY)-smoothstep(.5,.52,envY);
+        envBand+=smoothstep(.68,.7,envY)-smoothstep(.7,.72,envY);
+        float envBase=envY*.7+.15;
+        float env=envBase+envBand*1.5;
+        // Very sharp specular
+        float chrSpec=pow(max(dot(n,h1),0.),120.)*2.+pow(max(dot(n,h2),0.),80.)*.6;
+        col=vec3(env*.85)+chrSpec;
+        // Subtle dark crevices via ambient occlusion approximation
+        col*=.7+NdL*.5;
+        col=mix(col,col*1.3,fresnel*.5);
+        // Nearly monochrome with very faint base color hint
+        col=mix(col,col*vC*1.5,.08);
+      }
+      else if(uSurf<2.5){ // GLASS — ref img10: thick transparent, dark refraction edges
+        // Thick glass: center is mostly transparent, edges are dark refraction lines
+        float edgeDark=pow(1.-NdV,2.5);// darker at grazing angles (total internal reflection)
+        float thinEdge=pow(1.-NdV,6.);// very sharp edge line
+        // Base: very faint tint
+        vec3 glassBase=vec3(.92,.94,.96)*.15;
+        // Sharp specular catch lights
+        float glSpec=pow(max(dot(n,h1),0.),200.)*3.;
+        // Dark edge line like real glass refraction
+        vec3 edgeCol=vec3(.02,.04,.06);
+        col=mix(glassBase,edgeCol,edgeDark*.7)+glSpec;
+        col+=thinEdge*.05*vC;// very subtle color at extreme edge
+        alpha=.08+edgeDark*.55+glSpec*.3;
+      }
+      else if(uSurf<3.5){ // PLASTIC — ref img8: golden layered metal feel
+        // Warm metallic plastic with subsurface-like wrap lighting
+        float wrap=max(dot(n,uLD)*0.5+0.5,0.);
+        float sharpSpec=pow(max(dot(n,h1),0.),80.)*.9;
+        float softSpec=pow(max(dot(n,h1),0.),15.)*.2;
+        col=vC*(wrap*.6+.15)+sharpSpec*vec3(1.,.95,.85)+softSpec*vC;
+        col+=NdL2*.08*vC;
+        // Subtle warmth at edges
+        col+=rim*.06*vec3(1.,.8,.5);
+      }
+      else if(uSurf<4.5){ // HOLOGRAPHIC — ref img4: chromatic aberration at edges, clean center
+        // Center: clean metallic/chrome reflection
+        float envClean=refl.y*.5+.5;
+        float chrSpecH=pow(max(dot(n,h1),0.),100.)*1.5;
+        vec3 cleanRefl=vec3(envClean*.6+.2)+chrSpecH;
+        cleanRefl*=.7+NdL*.4;
+        // Edge only: chromatic aberration rainbow
+        float edgeAmount=pow(1.-NdV,3.5);// only at sharp edges
+        float hueShift=dot(refl,vec3(1.,.5,.2))*2.+refl.y*3.;
+        vec3 edgeRainbow=hsl(fract(hueShift),.95,.55);
+        vec3 edgeRainbow2=hsl(fract(hueShift+.15),.9,.45);
+        // Gradient blend: center is clean, edge is rainbow
+        col=mix(cleanRefl,edgeRainbow,edgeAmount*.85);
+        col+=edgeRainbow2*edgeAmount*.2;
+        col+=chrSpecH*.3;
+      }
+      else if(uSurf<5.5){ // MATTE — ref img3: underwater bronze, subsurface scatter feel
+        // Deep subsurface scattering look
+        float wrap=max(dot(n,uLD)*.6+.4,0.);
+        float backScatter=pow(max(-dot(n,uLD)*.5+.5,0.),2.)*.15;
+        // Muted, desaturated color with depth
+        vec3 base=vC*.5+vec3(.05,.08,.06);
+        col=base*(wrap*.7+.12)+backScatter*vec3(.1,.15,.12);
+        // Very subtle rim for depth without shine
+        col+=pow(1.-NdV,4.)*.04*vec3(.15,.2,.18);
+        // No specular at all
+      }
+      else if(uSurf<6.5){ // CERAMIC — ref img7: dark metallic sphere, warm edge tones
+        // Very dark base with subtle warm highlights
+        vec3 base=vC*.12+vec3(.03,.025,.02);
+        float ceramSpec=pow(max(dot(n,h1),0.),90.)*1.8;
+        float ceramSpec2=pow(max(dot(n,h2),0.),50.)*.4;
+        col=base*(NdL*.6+.12)+ceramSpec*vec3(.9,.85,.8)+ceramSpec2*vec3(.6,.5,.45);
+        // Warm edge tone
+        col+=rim*.12*vec3(.4,.25,.15);
+        col+=fresnel*.04*vec3(.35,.2,.1);
+      }
+      else if(uSurf<7.5){ // OBSIDIAN — ref img6: deep dark with neon-ish rim glow
+        vec3 base=vec3(.01,.005,.015);
+        // Deep dark body
+        col=base+base*NdL*.3;
+        // Sharp specular like polished volcanic glass
+        float obsSpec=pow(max(dot(n,h1),0.),150.)*2.5;
+        col+=obsSpec*vec3(.6,.7,.8);
+        // Neon-colored rim glow (teal/green tones from ref img6)
+        vec3 rimCol=mix(vec3(.1,.4,.35),vec3(.3,.6,.2),rim);
+        col+=pow(1.-NdV,4.)*.35*rimCol;
+        // Very faint purple/magenta accent at extreme angle
+        col+=pow(1.-NdV,8.)*.15*vec3(.4,.1,.3);
+      }
+      else{ // IRIDESCENT — edge-only rainbow gradient, clean center
+        // Clean reflective center (like a neutral metallic)
+        float envI=refl.y*.4+.5;
+        float iSpec=pow(max(dot(n,h1),0.),80.)*1.2;
+        vec3 centerCol=vec3(envI*.5+.2)+iSpec*.6;
+        centerCol*=.7+NdL*.4;
+        centerCol=mix(centerCol,centerCol*vC*1.2,.15);
+        // Edge rainbow: smooth gradient from center(clean) to edge(rainbow)
+        float edgeMask=pow(1.-NdV,2.5);
+        // Multi-layer thin film interference
+        float filmPhase=NdV*8.+dot(vWN,vec3(.3,.6,.1))*4.;
+        vec3 film1=hsl(fract(filmPhase),.85,.5);
+        vec3 film2=hsl(fract(filmPhase+.25),.7,.45);
+        vec3 edgeCol=mix(film1,film2,.5)*1.2;
+        // Smooth gradient: edgeMask controls blend
+        col=mix(centerCol,edgeCol,smoothstep(.0,.6,edgeMask));
+        // Extra bright rim
+        col+=pow(1.-NdV,5.)*.2*film1;
+        alpha=.9+fresnel*.1;
+      }
+      gl_FragColor=vec4(col,alpha*uOpacity);
+    }`,
+  transparent:opVal<1.,depthWrite:opVal>=.5,side:THREE.DoubleSide})}
 
 function mkXrayMat(fx,amt,mny,mxy){const u=commonUni(fx,amt,mny,mxy);
   return new THREE.ShaderMaterial({uniforms:u,vertexShader:NOISE_GLSL+FX_FUNC+colorGLSL+`
@@ -486,6 +631,7 @@ function autoFxUpdate(t){
     $('fx').value=newFx;
     if(Math.random()<.2){$('mode').value=modeOptionsArr[Math.floor(Math.random()*modeOptionsArr.length)]}
     if(Math.random()<.3){$('colormode').selectedIndex=Math.floor(Math.random()*$('colormode').options.length)}
+    if(Math.random()<.25){$('surface').selectedIndex=Math.floor(Math.random()*$('surface').options.length)}
     applyMode();
   }
   if(audioMid>.4){$('fxa').value=Math.floor(30+audioMid*70)}
@@ -510,8 +656,9 @@ function init(){
   cv.addEventListener('touchend',()=>drag=false);
   document.addEventListener('dragover',e=>{e.preventDefault();$('dz').classList.add('s')});document.addEventListener('dragleave',e=>{if(!e.relatedTarget)$('dz').classList.remove('s')});
   document.addEventListener('drop',async e=>{e.preventDefault();$('dz').classList.remove('s');for(const f of e.dataTransfer.files){if(f.name.match(/\.(glb|gltf)$/i))await processFile(f);else if(f.type.startsWith('audio/'))setupAudio(f)}});
-  for(const id of['mode','fx','ca','cb','colormode'])$(id).addEventListener('change',()=>applyMode());
+  for(const id of['mode','fx','ca','cb','colormode','surface'])$(id).addEventListener('change',()=>applyMode());
   for(const id of['ca','cb'])$(id).addEventListener('input',()=>applyMode());
+  $('opacity').addEventListener('input',()=>applyMode());
   // TEX toggle
   $('tex-toggle').addEventListener('click',()=>{useTexColors=!useTexColors;$('tex-toggle').classList.toggle('active',useTexColors);applyMode()});
   $('li').addEventListener('input',e=>{const v=e.target.value/100;dirL.intensity=v*1.5;ambL.intensity=v*.5});
@@ -567,8 +714,10 @@ function init(){
     $('li').value=Math.floor(Math.random()*80+20);
     dirL.intensity=($('li').value/100)*1.5;ambL.intensity=($('li').value/100)*.5;
     // Random camera
-    const camOpts=['orbit','drift','dramatic','top','static'];
+    const camOpts=['orbit','drift','dramatic','top','static','spin','pendulum','dolly','circle','crane'];
     $('cam').value=camOpts[Math.floor(Math.random()*camOpts.length)];
+    // Random surface
+    $('surface').selectedIndex=Math.floor(Math.random()*$('surface').options.length);
     applyMode();
   });
 }
@@ -907,6 +1056,7 @@ function renderFrame(t){
     if(u.uBass!==undefined)u.uBass.value=audioBass;if(u.uMid!==undefined)u.uMid.value=audioMid;if(u.uHigh!==undefined)u.uHigh.value=audioHigh;
     if(u.uColA!==undefined)u.uColA.value.set($('ca').value);if(u.uColB!==undefined)u.uColB.value.set($('cb').value);
     if(u.uColorMode!==undefined)u.uColorMode.value=parseFloat($('colormode').selectedIndex);
+    if(u.uOpacity!==undefined)u.uOpacity.value=parseInt($('opacity').value)/100;
   }});
   ren.setRenderTarget(renderTarget);ren.render(scene,cam);ren.setRenderTarget(null);
   postMat.uniforms.tDiffuse.value=renderTarget.texture;postMat.uniforms.uTime.value=t;
